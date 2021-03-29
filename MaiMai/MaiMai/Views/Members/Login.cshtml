@@ -1,0 +1,206 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LayoutPage1.cshtml";
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaiMai買買</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <link href="~/Content/cssCHIEN/Login.css" rel="stylesheet" />
+    <style>
+        .abc1 {
+            padding: 260px;
+        }
+        .abb2 {
+            padding-left: 16px;
+            padding-top: 21px;
+        }
+        .abb2:focus{
+                  outline:none;
+        }
+        input:focus {
+            outline: none
+        }
+    </style>
+</head>
+
+<body class="w-100">
+
+    <div class="cf flex-l bg-near-white abc1">
+        <div class="w-50-l pv6-l pv5-ns pv4 ph5-ns ph4 tr-l self-center tc tl-l">
+            <a class="nowrap" href="/">
+                <h1 class="mv0 f5 dib mr4 br b--light-silver">
+
+                    <img src="~/Maimai/images/svg/maimaiTOPLOGO.svg" style="left:50px" />
+                </h1>
+                <h2 class="mv0 f5 dib">一起幫助需要幫助的人</h2>
+            </a>
+        </div>
+        <div class="w-50-l ph5-ns ph4 pv6-l pt3-ns pv4 bg-white-l" style="border-radius: 50px;">
+            <div class="nt3 mt0-ns mb4"></div>
+
+            <a class="button b bg-fb white db pa3 ba b--blue mb3" href="/users/auth/facebook">Facebook 登入或註冊</a>
+            <div class="js-details reset-details mb3 f6 ba br2 b--light-gray">
+                <button class="pa3 tl js-summary button-text b black w-100 abb2 " type="button">
+                    會員登入
+                    <span class="f4 ml1">▾</span>
+                </button>
+                <div class="mt3 ph3 pb3">
+                    @*<form class="new_user" id="new_user" action="/users/sign_in" accept-charset="UTF-8" method="post">
+                        <input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="GquSTKxkkjl0S8dq2Pi+DNzYFEfVurvXYRew4reJSp+yFzr+TC7ns1AzQ1h3V66Y27LnVpFixs9LfVVRs2xoGQ==">*@
+                    <div class="mt3">
+                        <form>
+                            <div>
+                                <label class="b" for="userAccount">用戶名稱</label>
+                                <input class="w-100" required="required" autofocus="autofocus" type="email" name="userAccount" id="userAccount">
+                            </div>
+                            <div>
+                                <label class="b" for="userPassWord">密碼</label>
+                                <input class="w-100" required="required" type="password" name="userPassWord" id="userPassWord">
+                            </div>
+                        </form>
+
+
+                        @*<div>
+                                @Html.LabelFor(m => m.email, "E-mail", new { @class = "b" })
+                                @Html.TextBoxFor(m => m.email, new { @class = "w-100" })
+                            </div>
+                            <div>
+                                @Html.LabelFor(m => m.userPassWord, "密碼", new { @class = "b" })
+                                @Html.PasswordFor(m => m.userPassWord, new { @class = "w-100" })
+                            </div>*@
+                        <div>
+                            <label><input type="checkbox" name="RememberMe" />保持登入 </label>
+                        </div>
+                        <input type="submit" value="登入" class="button b green mr3" onclick="myFunction()" />
+
+
+
+                        @*<label class="b" for="user_email">電子信箱</label>
+                            <input class="w-100" required="required" autofocus="autofocus" type="email" name="user[email]" id="user_email">
+                            <label class="b" for="user_password">密碼</label>
+                            <input class="w-100" required="required" type="password" name="user[password]" id="user_password">
+                            <input checked="checked" type="hidden" name="user[remember_me]" id="user_remember_me">*@
+                        <div class="mt3">
+                            @*<input type="submit" name="commit" value="登入" class="button b green mr3">*@
+                            <span class="f7 gray">繼續進行代表你同意<a href="/docs/terms_of_service">服務條款</a>。</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="mv4-ns mv3 bt b--light-gray"></div>
+            @*@Html.ActionLink("註冊", "SignUp", "Members")*@
+
+            <a class="b f6 hover-blue black mr3" style="text-decoration: none" href="SignUp">註冊</a>
+
+            <a class="link b f6 hover-blue black mr3"  style="text-decoration: none"href="/users/password/new">忘記密碼或重設密碼</a>
+
+
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <!-- 若需相容 IE11，要加載 Promise Polyfill-->
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script>
+
+
+        function myFunction() {
+
+            var userAccount2 = $("#userAccount").val();
+
+            var userPassWord2 = $("#userPassWord").val();
+
+
+            $.ajax({
+
+                type: "POST",
+                url: " /Members/LoginMethod",
+                data: {
+
+
+                    userAccount: userAccount2,
+
+                    userPassWord: userPassWord2
+
+                },
+
+                success: function (data) {
+
+                    var byebye = data.indexOf("密碼錯誤")
+                    if (byebye < 0) {
+                        //alert(data);
+                        alertTest1()
+                        //window.location.href = "/NewMaimaiIndex/MaimaiIndexNew";
+                        setTimeout("home()", 2000)
+                    }
+                    else {
+                        alertTest()
+                    }
+
+
+                }
+
+            });
+
+            var test = getCookie('LoginAccount');
+
+            function getCookie(cookieName) {
+                var name = cookieName + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1);
+                    if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+                }
+                return "";
+            }
+            console.log(test);
+
+
+        }
+
+        function alertTest() {
+            Swal.fire(
+                "登入失敗", //標題
+                " 請確認您的帳號或密碼", //訊息內容(可省略)
+                "error" //圖示(可省略) success/info/warning/error/question
+
+            );
+        }
+
+        function alertTest1() {
+            Swal.fire(
+                "登入成功", //標題
+                " 歡迎光臨MaiMai</br>2秒後自動跳轉回首頁...", //訊息內容(可省略)
+                "success" //圖示(可省略) success/info/warning/error/question
+
+            );
+        }
+        function home() {
+            window.location.href = "/NewMaimaiIndex/MaimaiIndexNew";
+        }
+
+
+
+    </script>
+</body>
+
+</html>
+

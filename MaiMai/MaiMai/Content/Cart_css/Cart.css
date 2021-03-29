@@ -1,0 +1,24 @@
+.titleColor {
+  color: tomato;
+}
+
+.titleH {
+  height: 100px;
+}
+
+.tableCenter {
+  text-align: center;
+}
+
+.delColor {
+  fill: rgba(231, 19, 19, 0.808);
+}
+
+.totalPrice {
+  color: tomato;
+}
+
+.order {
+  background-color: tomato;
+  color: white !important;
+}

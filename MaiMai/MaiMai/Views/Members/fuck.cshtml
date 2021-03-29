@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "fuckyou";
+}
+
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+    <div id="content_p">
+
+        <div width="600px" height="400px">
+
+            <p>userAccount:<input type="text" name="userAccount" id="userAccount1" size="10"></p>
+            <p>userPassWord:<input type="text" name="userPassWord" id="userPassWord1" size="10"></p>
+            <p>city:<input type="text" name="city" id="city1" size="10"></p>
+            <p>address:<input type="text" name="address" id="address1" size="10"></p>
+            <p>phoneNumber:<input type="text" name="phoneNumber" id="phoneNumber1" size="10"></p>
+            <p>firstName:<input type="text" name="firstName" id="firstName1" size="10"></p>
+            <p>lastName:<input type="text" name="lastName" id="lastName1" size="10"></p>
+            <p>birthday:<input type="text" name="birthday" id="birthday1" size="10"></p>
+            <p>identityNumber:<input type="text" name="identityNumber" id="identityNumber1" size="10"></p>
+            <p>selfDescription:<input type="text" name="selfDescription" id="selfDescription1" size="10"></p>
+
+
+            <!--<p>實驗室鑰匙編號</p>
+    <input type="checkbox" name="lab[]" value="EC6018">EC6018
+    <input type="checkbox" name="lab[]" value="EC6023">EC6023
+    <input type="checkbox" name="lab[]" value="EC6027">EC6027 -->
+            <p><button type="button" id="p1" onclick="myFunction()">Traditional Submit</button><input type="reset" value="重新填寫"></p>
+        </div>
+    </div>
+    <script type="text/javascript">
+        function myFunction() {
+            $(document).ready(function () {
+              
+                var userAccount2 = $("#userAccount1").val();
+                var userPassWord2 = $("#userPassWord1").val();
+                var city2 = $("#city1").val();
+                var address2 = $("#address1").val();
+                var phoneNumber2 = $("#phoneNumber1").val();
+                var firstName2= $("#firstName1").val();
+                var lastName2 = $("#lastName1").val();
+                var birthday2 = $("#birthday1").val();
+                var identityNumber2 = $("#identityNumber1").val();
+                var selfDescription2 = $("#selfDescription1").val();
+                $.ajax({
+
+                    type: "POST",
+                    url: " /Members/SignUP",
+                    data: {
+
+
+                            userAccount: userAccount2 ,
+                        userPassWord: userPassWord2,
+                        city: city2,
+                        address: address2,
+                        phoneNumber: phoneNumber2,
+                        firstName: firstName2,
+                        lastName: lastName2,
+                        birthday: birthday2,
+                        identityNumber: identityNumber2,
+                        selfDescription: selfDescription2
+         
+
+
+
+                    },
+
+                    success: function (data) {
+                            alert('success: ' + data);
+                        }
+
+                    });
+
+            });
+
+        }
+    </script>
+
+</body>
+
+</html>
+

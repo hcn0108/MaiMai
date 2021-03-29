@@ -1,0 +1,338 @@
+﻿
+@{
+    ViewBag.Title = "MyAccount";
+    Layout = "~/Views/Shared/_Layoutmaimai.cshtml";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+    <link href="~/Content/cssCHIEN/MyAccount.css" rel="stylesheet" />
+    <style>
+        .gg1{
+            display:none!important;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="D_PC D_bs M_tG D_bo" style="padding-bottom:0px;padding-top:104px;">
+
+        <div class="D_PE">
+            <div class="D_PF">
+                <div class="D_ui M_kh D_uj M_ki  D_oz">
+                    <a class=" D_up D_ul M_kk D_tA D_un M_km  M_ko D_gN M_fQ"
+                       href="/MyAccount/MyAccount">
+                        <p class="  D_bO M_bF D_bU M_bL D_ca M_bR D_ce M_bU D_cg M_bW D_ci M_bY D_cm M_cc D_tB D_bH">
+                            編輯檔案
+                        </p>
+                    </a>
+                    <a class="D_ul M_kk D_tA D_gN M_fQ   " href="/MyAccount/MyPassword">
+                        <p class="greenline D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_ci M_bY D_cl M_cb D_tB D_bH">
+                            更改密碼
+                        </p>
+                    </a>
+                    @*<a class="D_ul M_kk D_tA D_gN M_fQ" href="/settings/data-and-privacy">
+                            <p class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_ci M_bY D_cl M_cb D_tB D_bH">
+                                數據和隱私
+                            </p>
+                        </a>*@
+                </div>
+            </div>
+            <div class="D_PG" id="account"></div>
+            @*<div class="D_PG"  id="account">
+                <div class="D_PO M_HA D_bx M_hH D_bz M_hJ">
+                    <h1 class="D_PP M_HB D_eA M_aX D_eJ M_bg D_eM M_bj D_eN M_bk D_eP M_bm D_eS M_bp D_cV">編輯檔案</h1>
+                    <h3 class="D_eA M_aX D_eJ M_bg D_eP M_bm D_eS M_bp D_cX">個人頭像</h3>
+                    <div class="D_PS M_HF D_PH">
+                        <div class="D_sc M_hk">
+                            <span class="D_bA D_se D_sn D_bB">
+                                <img alt="" class="D_bE M_bu"
+                                     src="https://media.karousell.com/media/photos/profiles/2021/03/05/quees778w2s11_1614911906.jpg"
+                                     title="">
+                            </span>
+                        </div>
+                        <div class="D_PJ">
+                            <p class="D_bO M_bF D_bX M_bO D_ca M_bR D_cc M_bT D_ch M_bX D_cj M_bZ D_cl M_cb D_PI D_bI">
+                                清晰的正面照片是買賣雙方相互了解的重要方式。
+                            </p><label class="D_Ju M_yc">
+                                <input type="file"
+                                       accept="image/png, image/jpeg" class="D_Jw M_yf">
+                                <div class="D_Jv M_ye"></div><button class="D_cY M_ap D_et D_el M_aA D_eh M_ax D_ex"
+                                                                     type="button">
+                                    上傳一張照片
+                                </button>
+                            </label>
+                        </div>
+                    </div>
+                    <form>
+                        <h3 class="D_PK D_eA M_aX D_eJ M_bg D_eP M_bm D_eS M_bp D_cX">公開檔案</h3>
+                        <div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp ">
+                                    <span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">使用者名稱</span><input type="text" aria-label="使用者名稱" class="D_ju M_fs D_jv M_ft D_jh " name="username"
+                                                                                                                                                                    value="quees778w2s11">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp">
+                                    <span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">姓名</span><input type="text" aria-label="姓名" class="D_ju M_fs D_jv M_ft D_jh" name="firstName"
+                                                                                                                                                                 value="ㄎ">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp">
+                                    <span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">姓氏</span><input type="text" aria-label="姓氏" class="D_ju M_fs D_jv M_ft D_jh" name="lastName"
+                                                                                                                                                                 value="黃建寧">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="D_JT M_Ay">
+                            <div class="D_JU M_Az D_Jx">
+                                <span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">個人簡介</span><textarea autocomplete="on" class="D_JW M_AA D_Jy D_JX M_AB" maxlength="255" name="biography"
+                                                                                                                                                             rows="4" style="height: 98px; max-height: 216px;"></textarea>
+                            </div>
+                            <div class="D_Kb M_AG">
+                                <span class="D_bO M_bF D_bX M_bO D_ca M_bR D_ce M_bU D_cg M_bW D_ck M_ca D_cl M_cb D_Kf M_AJ D_bI">0/255</span>
+                            </div>
+                        </div>
+                        <h3 class="D_PK D_eA M_aX D_eJ M_bg D_eP M_bm D_eS M_bp D_cX">位置</h3>
+
+                        <h3 class="D_PK D_eA M_aX D_eJ M_bg D_eP M_bm D_eS M_bp D_cX">個人資料</h3>
+
+                        <div class="D_PQ M_HC"></div><button class="D_cY M_ap D_et D_em M_aB D_ea M_ar D_eu D_PR M_HE"
+                                                             disabled="" role="submitButton" type="submit">
+                            儲存更改
+                        </button>
+                    </form>
+                </div>*@
+        </div>
+    </div>
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
+    <script>
+
+
+
+
+
+        $(function () {
+            $(".greenline").hover(function () {
+                $(".greenline").css("color", "green")
+            }, function () {
+                $(".greenline").css("color", "black");
+            });
+
+
+
+        $.ajax({
+            url: "@Url.Action("getAccount_P", "MyAccount")",
+            type: "GET",
+            success: function (account) {
+
+                $(account).each(function (index, mem) {
+                    console.log(mem.selfDescription)
+                    var Milliseconds = parseInt(mem.birthday.replace(/\D/igm, ""));
+                    var year = new Date(Milliseconds).getFullYear();
+                    var month = new Date(Milliseconds).getMonth() + 1;
+                    var date = new Date(Milliseconds).getDate();
+                    $("#account").html(`
+                   <form enctype="multipart/form-data">
+                <div class="D_PO M_HA D_bx M_hH D_bz M_hJ">
+                    <h1 class="D_PP M_HB D_eA M_aX D_eJ M_bg D_eM M_bj D_eN M_bk D_eP M_bm D_eS M_bp D_cV">編輯檔案</h1>
+                    <h3 class="D_eA M_aX D_eJ M_bg D_eP M_bm D_eS M_bp D_cX">個人頭像</h3>
+                    <div class="D_PS M_HF D_PH">
+                        <div class="D_sc M_hk">
+
+                            <span class="D_bA D_se D_sn D_bB">
+                                <img alt="" class="D_bE M_bu"
+                                     src="../Content/ProductPostImg/member/${mem.profileImg}"
+                                     title=""  id="Productimg"  >
+
+<input type="text" class="form-control" name="profileImg" hidden   id="ptr"  value="${mem.profileImg}" />
+                            </span>
+                        </div>
+                        <div class="D_PJ">
+                            <p class="D_bO M_bF D_bX M_bO D_ca M_bR D_cc M_bT D_ch M_bX D_cj M_bZ D_cl M_cb D_PI D_bI">
+                                清晰的正面照片是買賣雙方相互了解的重要方式。
+                            </p>
+<label class="D_Ju M_yc">
+
+                                    <input  class="gg1" type="file" accept="image/png, image/jpeg" onchange="previewFile()" name="upphoto" id="ptr2"  style="display: block;">
+
+                                <div class="D_Jv M_ye"></div>
+                          <button class="D_cY M_ap D_et D_el M_aA D_eh M_ax D_ex" type="button">
+                                    上傳一張照片
+                                </button>
+                            </label>
+                        </div>
+                    </div>
+
+                        <h3 class="D_PK D_eA M_aX D_eJ M_bg D_eP M_bm D_eS M_bp D_cX">公開檔案</h3>
+                        <div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp ">
+                                    <span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">使用者名稱</span><input type="text" aria-label="使用者名稱" class="D_ju M_fs D_jv M_ft D_jh " name="userAccount" value="${mem.userAccount}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp">
+                                    <span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">姓名</span><input type="text" aria-label="姓名" class="D_ju M_fs D_jv M_ft D_jh" name="firstName" value="${mem.firstName}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp">
+                                    <span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">姓氏</span><input type="text" aria-label="姓氏" class="D_ju M_fs D_jv M_ft D_jh" name="lastName"  value="${mem.lastName}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="D_JT M_Ay">
+                            <div class="D_JU M_Az D_Jx">
+                                <span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">個人簡介</span>
+                                  <textarea    value="${mem.selfDescription}"  autocomplete="on" class="D_JW M_AA D_Jy D_JX M_AB" maxlength="255" name="selfDescription" rows="4" style="height: 98px; max-height: 216px;"  >${mem.selfDescription} </textarea>
+                            </div>
+                            <div class="D_Kb M_AG">
+                                <span class="D_bO M_bF D_bX M_bO D_ca M_bR D_ce M_bU D_cg M_bW D_ck M_ca D_cl M_cb D_Kf M_AJ D_bI">0/255</span>
+                            </div>
+                        </div>
+                        <h3 class="D_PK D_eA M_aX D_eJ M_bg D_eP M_bm D_eS M_bp D_cX">位置</h3>
+                          <div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp ">
+<span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">城市</span><input type="text" aria-label="使用者名稱" class="D_ju M_fs D_jv M_ft D_jh " name="city" value="${mem.city}">
+                                 </div>
+                            </div>
+                        </div>
+                             <div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp ">
+<span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">地址</span><input type="text" aria-label="使用者名稱" class="D_ju M_fs D_jv M_ft D_jh " name="address" value="${mem.address}">
+                               </div>
+                            </div>
+                        </div>
+                        <h3 class="D_PK D_eA M_aX D_eJ M_bg D_eP M_bm D_eS M_bp D_cX">個人資料</h3>
+   <div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp ">
+<span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">手機號碼</span><input type="text" aria-label="使用者名稱" class="D_ju M_fs D_jv M_ft D_jh " name="phoneNumber" value="${mem.phoneNumber}">
+                                 </div>
+                            </div>
+                        </div>
+<div class="D_jo M_fm D_PT M_HG">
+                            <div class="D_jp M_fn D_iY">
+                                <div class="D_jr M_fp ">
+<span class="D_bO M_bF D_bY M_bP D_ca M_bR D_ce M_bU D_cg M_bW D_cj M_bZ D_cl M_cb D_jt M_fr D_jc D_jf D_bI">電子郵件信箱 </span><input type="text" aria-label="使用者名稱" class="D_ju M_fs D_jv M_ft D_jh " name="email" value="${mem.email}">
+                                 </div>
+                            </div>
+                        </div>
+<input name="UserID" hidden value="${mem.UserID}"/>
+<input type="text" hidden class="form-control" name="birthday" value="${year}-${month}-${date}" />
+<input name="userLevel" hidden value="${mem.userLevel}"/>
+  <input hidden value="${mem.userPassWord}"   name="userPassWord" id="pwd"/>
+<input type="text" class="form-control" name="identityNumber" hidden   value="${mem.identityNumber}" />
+
+<input type="text" class="form-control" name="connectionID" hidden    value="${mem.connectionID}" />
+<input type="text" class="form-control" name="totalStarRate"hidden  value="${mem.totalStarRate}" />
+<input type="text" class="form-control" name="ProImg"hidden  value="${mem.ProImg}" />
+                        <div class="D_PQ M_HC"></div><button class="D_cY M_ap D_et D_em M_aB D_ea M_ar D_eu D_PR M_HE"
+                                                             onclick="editMember()" type="button">
+                            儲存更改
+                        </button>
+                    </form>
+                </div>
+                `)
+                })
+            },
+            error: function () {
+                window.location.href = "../../Members/Login";
+            }
+        })
+        })
+        function previewFile() {
+            //var photo = $(eler).val();
+            const preview = document.querySelector('#Productimg');
+            const file = document.querySelector('input[type=file]').files[0];
+            const reader = new FileReader();
+
+            reader.addEventListener("load", function () {
+                // convert image file to base64 string
+                preview.src = reader.result;
+            }, false);
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        } //  doUpload end
+
+
+        function alertTest1() {
+            Swal.fire(
+                "修改成功", //標題
+                "盡情使用買買吧!", //訊息內容(可省略)
+                "success" //圖示(可省略) success/info/warning/error/question
+            );
+        }
+
+        function editMember() {
+            //if ($("#ptr2").val() == "" ) {
+            //    var oldPtr = $("#ptr").val();
+            //    var test = $("#ptr2").val(`${oldPtr}`);
+            //}
+
+            //if ($("#userPassWord").val() == "" && $("#userPassWordcheck").val() == "") {
+            //    var oldPwd = $("#pwd").val();
+            //    var test = $("#userPassWord").val(`${oldPwd}`);
+            //}
+            //else if ($("#userPassWord").val() != $("#userPassWordcheck").val()) {
+            //    alert("新密碼驗證失敗")
+            //    return false;
+            //}
+
+            var form = document.querySelector("form");
+            var formdata = new FormData(form);
+            console.log(formdata);
+            console.log(form);
+            $.ajax({
+                url: "@Url.Action("Doingmember", "MyAccount")",
+                type: "POST",
+                data: formdata,
+                processData: false,
+                contentType: false,
+                success: function (account) {
+                    //$("#userPassWord").val("")
+                    alertTest1()
+                }
+                })
+
+        }
+    </script>
+</body>
+
+</html>
+
+

@@ -1,0 +1,67 @@
+﻿
+@{
+    ViewBag.Title = "ProuductpostAll";
+}
+<div style="height:100px;"></div>
+<div style="height:100%;">
+    <div  class="container" >
+        <div id="tagtitle">
+        </div>
+    </div>
+</div>
+
+<script>
+    function CarouselClick(PostID) {
+        window.location.href = `/NewMaimaiIndex/ProdutPost?PostID=${PostID}`;
+    }
+    function tagonclick(TagID) {
+        window.location.href = `/MaimaiIndex/tagsearch?TagID=${TagID}`;
+    }
+
+    var getUrlString = location.href;
+    var url = new URL(getUrlString);
+    getTagID = url.searchParams.get("TagID");
+
+    $(function () {
+        $.ajax({
+            url: "/MaimaiIndex/TagResult",
+            type: "GET",
+            success: function (tagtitle) {
+                $(tagtitle).each(function (i, item) {
+                    $("#tagtitle").append(`
+                        <div hidden ${item.TagID} id="#TTTagID"></div>
+                        <div onclick="tagonclick(${item.TagID})" style="width:100px;height:50px;text-align:center;font-weight: bold;font-size: 25px;font-family: fantasy;">
+                                <a><p>${item.tagName}</p></a>
+                        </div>
+                        <div class="row" id="tag-search${item.TagID}">
+                        </div>
+                        <hr>
+                      `)
+                    $.ajax({
+                        url: "/NewMaimaiIndex/ProuductpostAll123",
+                        type: "GET",
+                        data: { TagID: item.TagID},
+                        success: function (ProuductpostAll123) {
+                            $(ProuductpostAll123).each(function (i, item1) {
+                                $(`#tag-search${item.TagID}`).append(`
+                                    <div class="col-3 TagSearchStyle" onclick="CarouselClick(${item1.PostID})"  >
+                                            <div class="TagSearchImgStyle">
+                                                    <a style="width:100%;height:100%">
+                                                            <img style="width:220px;height:220px;border-radius:15px;"
+                                                                src="../Content/ProductPostImg/${item1.img}"/>
+                                                    </a>
+                                            </div>
+                                            <div><h4>名稱:${item1.name}</h4></div>
+                                            <div><p>金額:${item1.price}</p></div>
+                                    </div>
+                                `)
+                            })
+                        }
+                    })
+                })
+            }
+        })
+
+    
+    })
+</script>

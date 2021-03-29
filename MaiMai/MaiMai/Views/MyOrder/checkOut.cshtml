@@ -1,0 +1,97 @@
+﻿
+@{
+    ViewBag.Title = "checkOut";
+}
+
+<h2>checkOut</h2>
+
+@*harsh key*--5294y06JbISpM5x9
+    Hash IV--v77hoKGq4kWxNNIS*@
+@*<button class="btn btn-danger pt-5 mt-5" onclick="getFormData()">送出交易資料</button>*@
+
+<div id="form" class="mt-5">
+
+</div>
+
+<script>
+
+    $(function () {
+
+                $.ajax({
+            url: "@Url.Action("creditCardcheckOut", "MyOrder")",
+            data: { OrderId:33},
+            type: "GET",
+                    success: function (result) {
+                
+                        var totalDollar = 0;
+                        var MerchantTradeNo = 0;
+                        var prodName ;
+                        var tradeDescription='';
+                        var Milliseconds, year, month, date, hour, min, sec;
+
+                        $.each(result, function (index, item) {
+                            Milliseconds = parseInt(item.MerchantTradeDate.replace(/\D/igm, ""));
+                            year = new Date(Milliseconds).getFullYear();
+                            month = new Date(Milliseconds).getMonth() + 1;
+                            date = new Date(Milliseconds).getDate();
+                            hour = new Date(Milliseconds).getHours();
+                            min = new Date(Milliseconds).getMinutes();
+                            sec = new Date(Milliseconds).getSeconds();
+
+                            totalDollar += item.TotalAmounot;
+                            prodName = item.ItemName;
+                            tradeDescription += item.ItemName + "," + item.TotalAmounot + "; ";
+                            MerchantTradeNo = item.MerchantTradeNo;
+                            // console.log(tradeDescription);
+                        }),
+                            console.log("prodName", prodName);
+                            console.log("tradeDescription", tradeDescription);
+                            console.log("MerchantTradeNo", MerchantTradeNo);
+
+                $("#form" ).append(`
+                    <form id="formCreditCard" method="post" accept-charset="UTF-8"
+                        action="https://payment-stage.opay.tw/Cashier/AioCheckOut/V5">
+
+                        MerchantID 商店代號:
+    <input type="text" name="MerchantID" value="2000132" /><br />
+    MerchantTradeNo 商店交易編號:
+    <input type="text" name="MerchantTradeNo" value=${MerchantTradeNo} /><br />
+    MerchantTradeDate 商店交易時間:
+    <input type="text" name="MerchantTradeDate" value="${year}/${month}/${date} ${hour}:${min}:${sec}" /><br />
+    PaymentType 交易類型:
+    <input type="text" name="PaymentType" value="aio" /><br />
+    TotalAmount 交易金額:
+    <input type="text" name="TotalAmounot" value="${totalDollar}"/><br />
+    TradeDesc 交易描述:
+    <input type="text" name="TradeDesc" value="${tradeDescription}" /><br />
+    ItemName 商品名稱:
+    <input type="text" name="ItemName" value=${prodName}/><br />
+    ReturnURL 付款完成通知回傳網址:
+    <input type="text" name="ReturnURL" value="https://localhost:44340/NewMaimaiIndex/MaimaiIndexNew" /><br />
+    ChoosePayment 預設付款方式:
+    <input type="text" name="ChoosePayment" value="Credit" /><br />
+    ClientBackURL Client端返回廠商網址:
+    <input type="text" name="ClientBackURL" value="https://localhost:44340/NewMaimaiIndex/MaimaiIndexNew" /><br />
+CreditInstallment 刷卡分期期數: 
+<input type="text" name="CreditInstallment" value="" /><br />
+
+InstallmentAmount 使用刷卡分期的付款金額: 
+<input type="text" name="InstallmentAmount" value="" /><br />
+
+Redeem 信用卡是否使用紅利折抵: 
+<input type="text" name="Redeem" value="" /><br />
+
+CheckMacValue 簽章類型: 
+<input type="text" name="EncryptType" value="1" /><br />    
+CheckMacValue 檢查碼:
+    <input type="text" name="CheckMacValue" value="A54BB85B3EEC88913D672A9F03AC5FA5A8A4AAA9EFFEC9E00419FAEE61EA9CE1" /><br />
+                        <input type="submit" value="送出訂單" />
+                    </form>
+                `)
+        },
+        //error:
+        })
+    });
+
+
+</script>

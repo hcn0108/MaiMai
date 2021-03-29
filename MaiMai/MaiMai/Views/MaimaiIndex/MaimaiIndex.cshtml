@@ -1,0 +1,253 @@
+﻿
+@{
+    ViewBag.Title = "MaimaiIndex";
+}
+
+<div style="height:50px"></div>
+<div class="container mt-5">
+
+    <div class="row">
+        <div class="col-8">
+            <!-- AJAX TAG -->
+            <div class="row mb-3 ml-1" id="tag">
+            </div>
+            <!-- AJAX TAG -->
+            <div class="bodr5 d-flex">
+                <!-- 商品廣告 -->
+                <div class="d-flex theWidth">
+                    <div class="col-md-12">
+                        <div class="carousel slide multi-item-carousel " id="theCarousel">
+                            <div class="carousel-inner ">
+                                <div class="item active d-flex  " id="PopularProduct">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="prevSlide" class="slide_btn">
+                    <i class="fa fa-caret-left"></i>
+
+                </div>
+                <div id="nextSlide" class="slide_btn">
+                    <i class="fa fa-caret-right"></i>
+                </div>
+
+            </div><br>
+            <!-- 商品廣告 -->
+            <!-- 明星廣告 -->
+            <!-- 明星廣告 -->
+            <!-- 布告欄 -->
+
+            <div class="bodr5 overflow-hidden">商品廣告</div><br>
+            <div class="bodr5 d-flex">
+                <!-- 商品廣告 -->
+                
+                    <div class="d-flex theWidth3"onclick="toRequiredPostView()">
+                        <div class="col-md-12">
+                            <div class="carousel slide multi-item-carousel " id="theCarousel">
+                                <div class="carousel-inner ">
+                                    <div class="item active d-flex  " id="RequiredPost">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="prevSlide3" class="slide_btn3">
+                        <i class="fa fa-caret-left"></i>
+                    </div>
+                    <div id="nextSlide3" class="slide_btn3">
+                        <i class="fa fa-caret-right"></i>
+                    </div>
+            
+
+            </div><br>
+
+
+        </div>
+        <div class="bodr5 col-4">
+            直播
+            <div class="bodr5 mx-auto mb-4 mt-3"></div>
+            <div class="bodr5 mx-auto mb-4"></div>
+            <div class="bodr5 mx-auto mb-0"></div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    //tagID
+    function tagonclick(TagID) {
+        window.location.href = `/MaimaiIndex/tagsearch?TagID=${TagID}`;
+    }
+
+    function toRequiredPostView() {
+        var test = getCookie('LoginAccount');
+        console.log(test)
+        if (test == "") {
+            window.location.href = `/RequiredPost/requiredPostIndexWithLogin`;
+        }
+        window.location.href = `/RequiredPost/requiredPostIndex`;
+    }
+
+    function getCookie(cookieName) {
+        var name = cookieName + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    $(function () {
+        $.ajax({
+            url: "/MaimaiIndex/TagResult",
+            type: "GET",
+            success: function (response) {
+                $(response).each(function (i, item) {
+                    $("#tag").append(
+                        `<div class="tag ml-2">
+                    <p><a class="btn" onclick="tagonclick(${item.TagID})" >${item.tagName}</a></p></div>`
+                    )
+                })
+            }
+        })
+        //tagID
+        //商品輪播
+        $.ajax({
+            url: "/MaimaiIndex/ProductPost",
+            type: "GET",
+            success: function (Productpost) {
+                $(".theWidth").css("width", Productpost.length * 700);
+                $(Productpost).each(function (i, item) {
+                    $("#PopularProduct").append(`
+
+                            <div class="Carouseladvertising">
+                               <div class=" all123">
+                                        <div class="photho">
+                                                <img src="../Content/ProductPostImg/${item.productImg}"/>
+                                     <h4>
+                                         ${item.productDescription}
+
+                                        </h4>
+                                        <p>
+                                            金額 : $${item.price}
+                                        </p>
+                                        </div>
+                               </div>
+                          </div>
+                    `)
+                })
+                liftCar();
+            }
+        })
+        //商品輪播
+        //明星輪播
+        $.ajax({
+            url: "/MaimaiIndex/ProductPost",
+            type: "GET",
+            success: function (Productpost) {
+                $(".theWidth").css("width", Productpost.length * 700);
+                $(Productpost).each(function (i, item) {
+                    $("#PopularProduct").append(`
+                            <div class="Carouseladvertising">
+                               <div class=" all123">
+                                        <div class="photho">
+                                                <img src="../Content/ProductPostImg/${item.productImg}"/>
+                                        <h4>
+                                         ${item.productDescription}
+                                        </h4>
+                                        <p>
+                                            金額 : $${item.price}
+                                        </p>
+                                        </div>
+                               </div>
+                          </div>
+                    `)
+                })
+                liftCar();
+            }
+        })
+        //明星輪播
+        //公佈欄輪播
+        $.ajax({
+            url: "/MaimaiIndex/RequiredPost",
+            type: "GET",
+            success: function (RequiredPost) {
+                $(".theWidth3").css("width", RequiredPost.length * 700);
+                $(RequiredPost).each(function (i, item) {
+                    $("#RequiredPost").append(`
+                            <div class="Carouseladvertising">
+                               <div class=" all123">
+                                        <div class="photho">
+                                        <img src="../Content/resource_nico/images/徵求台POST/${item.postImg}" />
+                                        <h4>
+                                         ${item.postDescription}
+                                        </h4>
+                                        </div>
+
+                               </div>
+                          </div>
+                    `)
+                })
+                liftCar();
+            }
+        })
+        //公佈欄輪播
+
+
+        //輪播左右
+        function liftCar() {
+            let slideNum = 0;
+            let slideCount = $(".Carouseladvertising").length;
+            let lastIndex = slideCount - 1;
+            let slidemove;
+      
+            function show() {
+                slidemove = 0 - 350 * slideNum;
+                $(".theWidth").css("left", slidemove);
+            }
+            $("#prevSlide").click(function () {
+                slideNum--;
+                if (slideNum < 0) slideNum = lastIndex;
+                show();
+                console.log(slidemove);
+
+            })
+            $("#nextSlide").click(function () {
+                slideNum++;
+                if (slideNum > lastIndex) slideNum = 0;
+                show();
+            })
+
+            let slideNum3 = 1;
+            let slideCount3 = $(".Carouseladvertising3").length;
+            let lastIndex3 = slideCount3 - 1;
+            //布告欄
+            function show3() {
+                slidemove = 0 - 350 * slideNum3;
+                $(".theWidth3").css("left", slidemove);
+            }
+            $("#prevSlide3").click(function () {
+                slideNum3--;
+                if (slideNum3 < 0) slideNum3 = lastIndex3;
+                show3();
+                console.log(slidemove);
+            })
+            $("#nextSlide3").click(function () {
+                slideNum3++;
+                if (slideNum3 > lastIndex3) slideNum3 = 0;
+                show3();
+            })
+            //布告欄
+        }
+
+    })
+
+        //輪播左右
+
+</script>

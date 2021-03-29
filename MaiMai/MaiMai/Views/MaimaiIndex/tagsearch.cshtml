@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "tagsearch";
+}
+
+<div style="height:100px"></div>
+
+@*<div>
+    <div><img src="${item.img}"/></div>
+    <div><h4></h4></div>
+    <div><p></p></div>
+</div>*@
+
+<div   style="height:100%;">
+    <div class="container">
+        <div class="row" id="tag-search">
+        </div>
+    </div>
+</div>
+
+<script>
+    function CarouselClick(PostID) {
+        window.location.href = `/NewMaimaiIndex/ProdutPost?PostID=${PostID}`;
+    }
+
+    var getUrlString = location.href;
+    var url = new URL(getUrlString);
+   getTagID= url.searchParams.get("TagID")
+
+    $.ajax({
+        url: "/MaimaiIndex/tagsearch123",
+        type: "GET",
+        data: {TagID:getTagID},
+        success: function (tagsearch) {
+            $(tagsearch).each(function (i, item) {
+                $("#tag-search").append(`
+                <div class="col-3 TagSearchStyle" onclick="CarouselClick(${item.PostID})"  >
+                     <div class="TagSearchImgStyle">
+                    <a style="width:100%;height:100%">
+                    <img style="width:220px;height:220px;border-radius:15px;"
+                            src="../Content/ProductPostImg/${item.img}"/>
+                    </a>
+                    </div>
+                    <div><h4>名稱:${item.name}</h4></div>
+                     <div><p>金額:${item.price}</p></div>
+                </div>
+                `)
+            })
+        }
+    })
+</script>

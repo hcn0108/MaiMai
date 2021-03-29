@@ -1,0 +1,316 @@
+﻿
+@{
+    ViewBag.Title = "ProdutPost";
+}
+<link href="~/Maimai/layout/css/Productpost.css" rel="stylesheet" />
+
+<div style="height:100px"></div>
+
+<div class="container">
+    <div class="row " id="postdetail">
+    </div>
+    <h3>逛逛其他商品</h3>
+    <div id="carousel" class="container">
+        <figure id="spinner">
+            @*<a class="btn" href="#"><img src="~/Maimai/images/image jpeg/490db2640e04a996eea2652b0dc0b144.jpg"></a>
+            <a class="btn" href="#"><img src="~/Maimai/images/image jpeg/490db2640e04a996eea2652b0dc0b144.jpg"></a>
+            <a class="btn" href="#"><img src="~/Maimai/images/image jpeg/490db2640e04a996eea2652b0dc0b144.jpg"></a>
+            <a class="btn" href="#"><img src="~/Maimai/images/image jpeg/490db2640e04a996eea2652b0dc0b144.jpg"></a>
+            <a class="btn" href="#"><img src="~/Maimai/images/image jpeg/490db2640e04a996eea2652b0dc0b144.jpg"></a>
+            <a class="btn" href="#"><img src="~/Maimai/images/image jpeg/490db2640e04a996eea2652b0dc0b144.jpg"></a>
+            <a class="btn" href="#"><img src="~/Maimai/images/image jpeg/490db2640e04a996eea2652b0dc0b144.jpg"></a>
+            <a class="btn" href="#"><img src="~/Maimai/images/image jpeg/490db2640e04a996eea2652b0dc0b144.jpg"></a>*@
+        </figure>
+        <div class="d-flex justify-content-between">
+            <a class="btn btn-light" onclick="galleryspin('-')">&lt;</a>
+            <a class="btn btn-light" onclick="galleryspin('')">&gt;</a>
+        </div>
+    </div>
+</div>
+    @*下方輪播牆*@
+
+    @section scripts {
+
+        <script>
+        var getUrlString = location.href;
+        var url = new URL(getUrlString);
+        getProductPostID = url.searchParams.get("PostID");
+        $(function () {
+            $.ajax({
+                url: "/NewMaimaiIndex/ProdutPostDetail",
+                type: "GET",
+                data: { PostID: getProductPostID },
+                //data內的直要跟conterl內的action值一樣
+                success: function (postdetail) {
+                    $(postdetail).each(function (i, item) {
+                        console.log(item.ProductPostID);
+                        $("#postdetail").prepend(`
+                         <div class="col-6 col-md-6 prdMT ">
+                                    <h4 >${item.ProductName}</h4>
+                                <div class="prdImg">
+                                        <img src="../Content/ProductPostImg/${item.img}" alt="">
+                                </div>
+                         </div>
+                        <div class="col-6 col-md-6 prdMT-text">
+                                <div class="priceH d-flex justify-content-between">
+                                    <div class="d-flex">
+                                            <div class="priceColor">商品價格</div>
+                                            <div ><span class="priceColor2">${item.price}</span> <span calss="priceColor3">TWD</span></div>
+                                    </div>
+                                                    </div>
+                                                                <span class="errorColor" id="overcount"></span>
+                                                                            <div class="priceH">
+                                                                                <label class="d-block">描述</label>
+                                                                                <textarea cols="70" rows="6" readonly class="description">${item.Description}</textarea>
+                                                                            </div>
+                                                <div><a onclick="displayChat(${item.ProductPostID})">聯絡賣家</a><a href="/RequiredPost/requiredPostIndex">${item.userAccount}</a></div>
+
+                                                     <div   style="margin-left:85%;" class="btn redbtn" data-toggle="modal" onclick="report()" data-target="#exampleModalCenter">檢舉</div>
+                                                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h2 class="modal-title" id="exampleModalCenterTitle">檢舉內容</h2>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span id="modalSpan" aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                         <div class="modal-body"></div>
+                                                                         <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                                                                            <button id="submit" onclick="saveReport()" type="button" class="btn btn-primary">送出</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                    <div style="border:1px solid;color:	#BEBEBE;weight:150px;"></div>
+                                                    <div class="mt-3">
+                                                    <div class="d-flex " >   
+                                                                        <div style="border-top:1px solid  #5B5B5B"></div>
+                                                                        <div class="mr-5 mt-2">訂購數量</div>
+                                                                        <div class="">
+                                                                        <a id="countdown" class="btn" onclick="countDownClick()">
+                                                                            <svg id="minus-subtract-reduce-discount" width="20px"
+                                                                                 height="20px" fill="#0072E3" class="svgHover"
+                                                                                 style="enable-background:new 0 0 15 15;" version="1.1" viewBox="0 0 15 15"
+                                                                                 xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                                                                                 xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                                            <path d="M7.5,0C3.364,0,0,3.364,0,7.5S3.364,15,7.5,15S15,11.636,15,7.5S11.636,0,7.5,0z M7.5,14C3.916,14,1,11.084,1,7.5  S3.916,1,7.5,1S14,3.916,14,7.5S11.084,14,7.5,14z" />
+                                                                              <rect height="1" width="8" x="3.5" y="7" />
+                                                                             </svg>
+                                                                        </a>
+
+                                                                        <input id="count" class="Nborder" value="0" size="1" readonly ="readonly">
+
+                                                                        <a id="countup" class="btn"  onclick="countUpClick()">
+                                                                            <svg width="24px" height="24px" class="svgHover" fill="#0072E3"
+                                                                                 viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                                                                <title />
+                                                                                <g data-name="Layer 2" id="Layer_2">
+                                                                                    <path d="M16,29A13,13,0,1,1,29,16,13,13,0,0,1,16,29ZM16,5A11,11,0,1,0,27,16,11,11,0,0,0,16,5Z" />
+                                                                                    <path d="M16,23a1,1,0,0,1-1-1V10a1,1,0,0,1,2,0V22A1,1,0,0,1,16,23Z" />
+                                                                                    <path d="M22,17H10a1,1,0,0,1,0-2H22a1,1,0,0,1,0,2Z" />
+                                                                                </g>
+                                                                                <g id="frame">
+                                                                                    <rect class="cls-1" height="32" width="32" />
+                                                                                </g>
+                                                                            </svg>
+                                                                        </a>
+                                                                    </div>
+                                                         </div>
+                                                                            <div class="d-flex mt-3">
+                                                                                    <div>剩餘數量 : </div>
+                                                                                    <div class=" ml-5"><span id="inStoreQTY">${item.QTY}</span></div>
+                                                                             </div>
+                                               
+
+                                    <div class=" justify-content-center mt-3" onclick="addcar(${item.ProductPostID})">
+                                        <a class="btn addcart" >
+                                            <svg id="Capa_1" width="30px" height="20px"
+                                                 style="enable-background:new 0 0 60.013 60.013;" version="1.1"
+                                                 viewBox="0 0 60.013 60.013" xml:space="preserve" xmlns="http://www.w3.org/2000/svg"
+                                                 xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <path d="M11.68,12.506l-0.832-5h-2.99c-0.447-1.72-1.999-3-3.858-3c-2.206,0-4,1.794-4,4s1.794,4,4,4c1.859,0,3.411-1.28,3.858-3  h1.294l0.5,3H9.624l0.222,1.161l0,0.003c0,0,0,0,0,0l2.559,13.374l1.044,5.462h0.001l1.342,7.015  c-2.468,0.186-4.525,2.084-4.768,4.475c-0.142,1.405,0.32,2.812,1.268,3.858c0.949,1.05,2.301,1.652,3.707,1.652h2  c0,3.309,2.691,6,6,6s6-2.691,6-6h11c0,3.309,2.691,6,6,6s6-2.691,6-6h4c0.553,0,1-0.447,1-1s-0.447-1-1-1h-4.35  c-0.826-2.327-3.043-4-5.65-4s-4.824,1.673-5.65,4h-11.7c-0.826-2.327-3.043-4-5.65-4s-4.824,1.673-5.65,4H15  c-0.842,0-1.652-0.362-2.224-0.993c-0.577-0.639-0.848-1.461-0.761-2.316c0.152-1.509,1.546-2.69,3.173-2.69h0.781  c0.02,0,0.038,0,0.06,0l6.128-0.002L33,41.501v-0.001l7.145-0.002L51,41.496v-0.001l4.024-0.001c2.751,0,4.988-2.237,4.988-4.987  V12.494L11.68,12.506z M4,10.506c-1.103,0-2-0.897-2-2s0.897-2,2-2s2,0.897,2,2S5.103,10.506,4,10.506z M46,45.506  c2.206,0,4,1.794,4,4s-1.794,4-4,4s-4-1.794-4-4S43.794,45.506,46,45.506z M23,45.506c2.206,0,4,1.794,4,4s-1.794,4-4,4  s-4-1.794-4-4S20.794,45.506,23,45.506z M58.013,21.506H51v-7.011l7.013-0.002V21.506z M42,39.498v-6.991h7v6.989L42,39.498z   M42,30.506v-7h7v7H42z M24,39.503v-6.997h7v6.995L24,39.503z M24,30.506v-7h7v7H24z M13.765,23.506H22v7h-6.895L13.765,23.506z   M49,21.506h-7v-7h7V21.506z M40,21.506h-7V14.5l7-0.002V21.506z M31,14.506v7h-7v-7H31z M33,23.506h7v7h-7V23.506z M51,23.506h7v7  h-7V23.506z M22,14.504v7.003h-8.618l-1.34-7L22,14.504z M15.487,32.506H22v6.997l-5.173,0.002L15.487,32.506z M33,32.506h7v6.992  L33,39.5V32.506z M55.024,39.494L51,39.495v-6.989h7.013v4C58.013,38.154,56.672,39.494,55.024,39.494z" />
+                                            </svg>放入購物車
+                                        </a>
+                                    </div>
+                            </div>
+            </div>
+                    `)
+                    })
+                }
+            });
+
+            $.ajax({
+                url: "/NewMaimaiIndex/addCarousel",
+                type: "GET",
+                success: function (postDetail2) {
+                    $(postDetail2).each(function (i, item) {
+                        $("#spinner").prepend(`
+                            <a class="btn" onclick="CarouselClick(${item.ProductPostID})"><img style="width:350px;height:280px;" src="../Content/ProductPostImg/${item.productImg}"></a>
+                        `)
+                    })
+                }
+            });
+        })
+     //====去檢舉頁面======================================================
+     function report() {
+        $.ajax({
+            url: "@Url.Action("getReport","MyOrder")",
+            data: {},
+            type: "GET",
+            success: function (result) {
+                $(".modal-body").html(`
+                        <p>
+                                         <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">檢舉標籤</a>
+                        </p>
+                                                        <div class="collapse" id="collapseExample">
+                                                                <div  id="reportTags"class="btn-group">
+                                                                </div>
+                                                        </div>
+                                                       <div id="warning" class="align-content-center">
+                                                                <label ><h3>內容描述</h3></label>
+                                                        </div>
+                        <textarea id="reportTXT" rows="15" cols="60"></textarea>
+                                                                `);
+
+                $(result).each(function (index, item) {
+                    $("#reportTags").append(`
+                                    <input type="radio"class="btn btn-info " value="${index}"style="border-radius:50px"id="btnradio${index}" required>
+                                                    <label  for="btnradio${index}" class="btn btn-info " value="${index}"style="border-radius:50px" onclick="changeColor()" >
+
+                                                    ${item.reason}</label>
+                `)
+                })
+            }
+        })
+    }
+     function changeColor() {
+        $(event.target).removeClass("btn-info").addClass("btn-success").siblings().removeClass("btn-success").addClass("btn-info");
+    };
+     function saveReport() {
+        console.log(`reportTAG=$('input:checked').val()`);
+        var reportTAG = $('input:checked').val() * 1 + 1;
+        if (reportTAG == "NaN") {
+            return false;
+        }
+        $.ajax({
+            url: "@Url.Action("saveReport","MyOrder")",
+            data: { reportTXT: $("#reportTXT").val(), reportTAG: reportTAG  },
+            type: "POST",
+            success: function (result) {
+                swal('成功', '送出成功', 'success');
+                setTimeout(function () { $(".close").click() }, 700);
+            },
+            error: function(){
+                swal("失敗","檢舉標籤為必要勾選!!",'error');
+            }
+        })
+        }
+     //======去檢舉頁面====================================================
+        //選轉輪播
+            function CarouselClick(PostID) {
+                window.location.href = `/NewMaimaiIndex/ProdutPost?PostID=${PostID}`;
+                console.log(ProductPostID);
+            }
+        //=========================================================
+        function addcar(getProductPostIDNew) {
+            console.log(getProductPostIDNew);
+            $.ajax({
+                url: "/NewMaimaiIndex/goCar1",
+                type: "post",
+                data: {
+                    ProductPostID: getProductPostIDNew,
+                    QTY: $("#count").val(),
+                    //inStoreQTY: $("#inStoreQTY").val(),
+                    //CartNumber: "123",
+                    //UserID: $("#itemuserid").attr("name"),
+                },
+                success: function (data) {
+                    if (data == "請先登入") {
+                        window.location.href = "/Members/Login";
+                    }
+                    alert(data)
+                    window.location.href = "/Cart/cartIndex";
+                }
+            });            
+            }
+            //$(function () {
+       
+            //})
+        //=========================================================
+        var angle = 0;
+        function galleryspin(sign) {
+            spinner = document.querySelector("#spinner");
+            if (!sign) { angle = angle + 45; } else { angle = angle - 45; }
+            spinner.setAttribute("style", "-webkit-transform: rotateY(" + angle + "deg); -moz-transform: rotateY(" + angle + "deg); transform: rotateY(" + angle + "deg);");
+        }
+        //選轉輪播
+        //數量計算
+        function countDownClick() {
+            var count = $("#count").val();
+            var instoreQty = $("#inStoreQTY").html();
+            if (count <= 0) {
+                $("#count").val("0");
+            }
+            else {
+                $("#count").val(`${(count * 1) - 1}`);
+                $("#inStoreQTY").html(`${(instoreQty * 1) + 1}`)
+                $("#overcount").html("")
+            }
+        }
+        function countUpClick() {
+            var count = $("#count").val();
+            var instoreQty = $("#inStoreQTY").html();
+            if (count >= (instoreQty * 1)) {
+                $("#count").val(`${instoreQty}`);
+                $("#overcount").html(`數量已達上限`)
+            }
+            else {
+                $("#count").val(`${count * 1 + 1}`);
+                $("#inStoreQTY").html(`${(instoreQty - 1)}`)
+            }
+        }
+         //數量計算
+        </script>
+
+        @*選轉輪播*@
+        <script>
+                $("#countdown").on("click", function () {
+                    const count = $("#count").val();
+                    if (count <= 1) {
+                        $("#count").val("1");
+                    }
+                    else {
+                        $("#count").val(`${count - 1}`);
+                        $("#overcount").html("")
+                    }
+                })
+                $("#countup").on("click", function () {
+                    const instoreQty = $("#inStoreQTY").text();
+                    const count = $("#count").val();
+                    if (count >= (instoreQty * 1)) {
+                        $("#count").val(`${instoreQty}`);
+                        $("#overcount").html(`數量已達上限`)
+                    }
+                    else {
+                        $("#count").val(`${count * 1 + 1}`);
+                    }
+                })
+                $("#count").on("change", function () {
+                    const instoreQty = $("#inStoreQTY").text();
+                    const count = $("#count").val();
+                    if (count >= (instoreQty * 1)) {
+                        $("#count").val(`${instoreQty}`);
+                        $("#overcount").html(`數量已達上限`)
+                    }
+                })
+                var angle = 0;
+                function galleryspin(sign) {
+                    spinner = document.querySelector("#spinner");
+                    if (!sign) { angle = angle + 45; } else { angle = angle - 45; }
+                    spinner.setAttribute("style", "-webkit-transform: rotateY(" + angle + "deg); -moz-transform: rotateY(" + angle + "deg); transform: rotateY(" + angle + "deg);");
+                }
+            </script>
+        @*選轉輪播*@
+    }

@@ -1,0 +1,607 @@
+﻿
+@{ ViewBag.Title = "requiredPostIndex"; }
+<head>
+    <link href="~/Content/resource_nico/requriedIndex.css" rel="stylesheet" />
+    <link href="~/Content/resource_nico/createProductPost.css" rel="stylesheet" />
+    <script src="~/Content/resource_nico/tw-city-selector.min.js"></script>
+
+
+</head>
+
+
+<div class="container" style="padding-top: 100px;background-color: #FBEFF4; border-radius:20px">
+    <div class="container" style=" padding-bottom: 40px; border-radius: 20px; ">
+        <div class="row">
+            <ul class="nav nav-pills mb-3 requriedTab w-100" style="justify-content:space-between" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" style=" background-color: #B5838D ;color: #FBEFF4;" id="pills-home-tab" data-toggle="pill" href="#allPost" role="tab"
+                       aria-controls="pills-home" aria-selected="true">所有徵求貼文</a>
+
+                </li>
+                <li >
+                     <a class="btn btn-post" style="color: #B5838D; font-weight:bolder;" data-toggle='modal' data-target='#bulid'> 我要徵求</a>
+                    
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="modal fade" id="bulid" tabindex="-1" role="dialog" aria-labelledby="editMemberTitle"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editMemberTitle"> 徵求貼文</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="editMemberbody">
+                        <form id="form1" class="formFrame mx-auto" enctype="multipart/form-data">
+                            <div class="displayImg">
+                                <div class="photo"><img id="Productimg"></div>
+                                <input class="ml-2 form-control" type="file" required name="upphoto" id="productImg" style="display: block" ; onchange="previewFile()">
+                            </div>
+                            <div class="displayInput">
+                                <h6>貼文名稱:</h6><input class="ml-2 form-control" type="text" required name="postName" id="postName">
+                                <h6>
+                                    貼文描述:
+                                </h6><textarea class="ml-2 form-control" id="postDescription" name="postDescription" placeholder="使用程度、幾成新" class="w-75" required onclick="tag()"></textarea>
+                                <h6>交貨方式 : </h6>
+                                <div>
+                                    <div class="form-check  input-group ml-2">
+                                        <input class="form-check-input" type="radio" name="transationType" value="express" id="express">
+                                        <label class="form-check-label " for="express">
+                                            物流交貨
+                                        </label>
+                                    </div>
+                                    <div class="form-check  input-group ml-2">
+                                        <input class="form-check-input" type="radio" name="transationType" value="pTop" id="pTop" checked>
+                                        <label class="form-check-label" for="pTop">
+                                            當面交貨/地點
+                                        </label>
+                                    </div>
+                                    <div class="my-selector-b"></div>
+                                </div>
+
+
+
+                                <h6>價格:</h6><input class="ml-2 form-control" type="text" required name="estimatePrice" id="estimatePrice">
+                                <h6>數量:</h6><input class="ml-2 form-control" type="text" required name="requiredQTY" id="requiredQTY">
+                                <h6>
+                                    標籤:
+                                    <select id="tagSelectioninPost" required class="form-control" name="TagID">
+                                        <option>Choose...</option>
+                                    </select>
+                                </h6>
+                                @*====userID======
+                                    ====posttime====*@
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="sendRequiredPost()">新增貼文</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="showPostArea tab-content " id="pills-tabContent">
+
+            <div class="tab-pane fade show active" id="allPost" role="tabpanel" aria-labelledby="pills-home-tab">
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+@*=================report 立恆=====================*@
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalCenterTitle">檢舉內容</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span id="modalSpan" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                <button id="submit" onclick="saveReport()" type="button" class="btn btn-primary">送出</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*=================report =====================*@
+
+
+<script>
+    $(function () {
+
+
+        new TwCitySelector({
+            el: ".my-selector-b",
+            elCounty: ".county",
+            elDistrict: ".district"
+        });
+
+
+        $.ajax({
+            url: "/RequiredPost/allrequiredPost",
+            type: "GET",
+            success: function (response) {
+
+                $(response).each(function (i, item) {
+
+
+                    $("#allPost").append(`
+                            <div class="my-3" style="background-color:#FFFFFF">
+                           <div class="row mx-auto shadow-lg" id="start" onclick="window.open('../../RequiredPost/requiredSingalPage?rqID=${item.RequiredPostID}','徵求台')">
+                            <div class="photo">
+                                <img src="../Content/resource_nico/images/徵求台POST/${item.postImg}" />
+                            </div>
+                            <div class="post-text">
+                                <div class="d-flex justify-content-between">
+                                    <h3 id="postName${i}">${item.postName}</h3>
+                                    <h6>${item.county} <span>${item.district}</span></h6>
+                                </div>
+                                <h6 id="userName${i}">買家 : <span class="font-weight-bolder">${item.userAccount}</span></h6>
+                                <div>
+                                    <h6 id="text${i}">產品敘述 : <span class="font-weight-bolder">${item.postDescription}</span></h6>
+                                </div>
+                                <div class="post-button">
+                                    <h6 id="price${i}">大概徵求價位：<span class="font-weight-bolder">${item.estimatePrice}</span>  元</h6>
+                                    <a data-toggle="collapse" href="#collapseComment${i}" role="button" aria-expanded="false"
+                                        aria-controls="collapseExample" name="${item.RequiredPostID}"
+                                        onclick="checkCommentList(this,'${i}')">查看留言(<span id="cmCount${i}">0</span>)</a>
+                                    <div>
+                                        <a class="btn btn-comment" style="color:#FFB4A2" data-toggle="collapse" href="#collapseExample${i}" role="button"
+                                            aria-expanded="false" aria-controls="collapseExample">我要留言</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                            </div>
+                            <div class="collapse w-100 comment" id="collapseComment${i}">
+                                <div class="card card-body w-100 comment" style="background-color:#F7E7DE">
+
+                                </div>
+                            </div>
+
+                            <div class="collapse w-100" id="collapseExample${i}">
+                                <div class="card card-body w-100 shadow" >
+                                    <span class="btn btn-outline-dark" data-toggle="modal" onclick="report()" data-target="#exampleModalCenter" style="width:60px">檢舉</span>
+
+                                    <form class="formFrame mx-auto Commentform${i}" enctype="multipart/form-data">
+                                        <div class="displayImg Productimg${i}">
+                                            <div class="photo"><img id="Productimg${i}"></div>
+                                            <input type="file" onChange="doUpload(this,'${i}')" name="upphoto" id="productImg${i}"
+                                                style="display: block;">
+                                        </div>
+                                        <div class="displayInput w-50">
+                                            <h6>產品名稱:</h6><input  class="ml-2 form-control" type="text" name="productName" id="productName${i} ">
+                                            <h6>產品描述:</h6>
+                                                    <textarea id="productDescription${i}" name="productDescription" placeholder="使用程度、幾成新"
+                                                    class="form-control ml-2"  rows="3" onclick="tag()"></textarea>
+                                            <h6>交貨方式:</h6>
+                                            <div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="transationType" value="express${i}"
+                                                        id="express${i}" checked>
+                                                    <label class="form-check-label " for="express${i}">
+                                                        物流交貨
+                                                    </label>
+                                                </div>
+                                                <div class="form-check input-group">
+                                                    <input class="form-check-input" type="radio" name="transationType"
+                                                        onchange="changeDis(${i})" id="pTop${i}" value="pTop${i}">
+                                                    <label class="form-check-label" for="pTop${i}">
+                                                        當面交貨/地點
+                                                    </label>
+                                                </div>
+                                                <div id="city${i}"></div>
+                                            </div>
+
+
+                                            <h6>價格:</h6><input class="ml-2 form-control" type="text" name="price" id="price${i}">
+                                            <h6>數量:</h6><input class="ml-2 form-control" type="text" name="inStoreQTY" id="inStoreQTY${i}">
+                                            <h6>標籤:
+                                                <select id="tagselection${i}" class="form-control" name="TagID">
+                                                    <option>Choose...</option>
+                                                </select>
+                                            </h6>
+
+                                            <!-- createtime -->
+                                            <input type="hidden" name="createdTime">
+                                            <!-- userID -->
+                                            <input type="hidden" name="RequiredPostID" value="${item.RequiredPostID}">
+                                            <!-- requiredPostID -->
+                                            <div style="display: flex; justify-content:flex-end;">
+
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                    <button type="submit" class="btn btn-comment"  style="color:#FFB4A2" onclick="submitProdouct(this,${i})">建立商品留言</button>
+                                </div>
+                            </div> @*end of 訂單*@
+                            </div)
+                    `)
+
+                    checkSpan(item.RequiredPostID,i);
+
+                })
+            }
+        })
+        // ajax end
+    })//documentReady
+
+    $('input[type=radio]').change(function () {
+        if (this.value == 'pTop') {
+            $(".county").attr('disabled', false);
+            $(".district").attr('disabled', false);
+        }
+        else {
+            $(".county").attr('disabled', true)
+            $(".district").attr('disabled', true)
+        }
+    });
+
+
+
+    function changeDis( index) {
+
+        new TwCitySelector({
+            el: ".my-selector-c",
+            elCounty: ".county", // 在 el 裡查找 dom
+            elDistrict: ".district", // 在 el 裡查找 dom
+            elZipcode: ".zipcode" // 在 el 裡查找 dom
+        });
+
+        $(`#city${index}`).addClass("my-selector-c");
+        $(`#city${index}`).html(`
+            <div>
+                <select class="county" name="county"></select>
+            </div>
+            <div>
+                <select class="district" name="district"></select>
+            </div>`);
+
+    }
+
+
+
+    function checkSpan(id ,i ) {
+
+        $.ajax({
+            url: "/RequiredPost/checkCommentSPan",
+            type: "GET",
+            data: { 'i': id },
+            success: function (response) {
+                $(`#cmCount${i}`).html(`${response}`)
+            }
+        })
+    }
+
+        function getCookie(cookieName) {
+            var name = cookieName + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1);
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return "";
+
+        }
+
+     function previewFile() {
+            //var photo = $(eler).val();
+         const preview = document.querySelector('#Productimg');
+         const file = document.querySelector('input[type=file]').files[0];
+         const reader = new FileReader();
+
+         reader.addEventListener("load", function () {
+             // convert image file to base64 string
+             preview.src = reader.result;
+         }, false);
+
+         if (file) {
+             reader.readAsDataURL(file);
+         }
+        } //  doUpload end
+
+    function doUpload(elem, index) {
+
+        const preview = document.querySelector(`#Productimg${index}`);
+        //const file = document.querySelector('input[type=file]').files[0];
+        file = elem.files[0];
+        const reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            // convert image file to base64 string
+            preview.src = reader.result;
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+
+    }
+
+    function submitProdouct(eler, index) {
+        console.log(index)
+
+        var test = getCookie('LoginAccount');
+        if (test == "") {
+            Swal.fire("必須要登入才能留言喔")
+
+           
+            return window.location.href = `/Members/Login`;
+        }
+
+        var form = document.querySelector(`.Commentform${index}`)
+        console.log(form)
+        var data = new FormData(form);
+            $.ajax({
+                url: "/RequiredPost/commemtProductPost",
+                type: "Post",
+                data: data,
+                processData: false,
+                contentType:false,
+                success: function (response) {
+                    swal('成功', '送出成功', 'success');
+                    window.location.reload("/RequiredPost/requiredPostIndex")
+
+                }
+            })
+        }//end  of submit product
+
+
+    function tag() {
+        var txt = ""
+        $.ajax({
+            url: "/RequiredPost/getAllTag",
+            type: "GET",
+            success: function (response) {
+                $(response).each(function (i, item) {
+                    // txt += <a>itrm.tagid </a>
+                    txt += `<option value=${item.TagID}>${item.tagName}</option>`
+                    $("h6>select").html(txt)
+                })
+            }
+        })
+
+    }// end tag function
+    function checkCommentList(eler,index) {
+
+
+        var test = getCookie('LoginAccount');
+        console.log(test)
+        console.log(typeof test)
+
+        if (test == "") {
+            var test = getCookie('LoginAccount');
+            console.log(test)
+            console.log(typeof test)
+            alertTest1()
+            setTimeout("home()", 2000)
+        }
+
+        var data = $(eler).attr("name");
+        var inner = "";
+
+        $.ajax({
+            url: "/RequiredPost/checkAllComment",
+            type: "Post",
+            data: { 'data': data },
+            success: function (response) {
+                $(response).each(function (i, item) {
+
+                    if (item.county == null) {
+                        inner += `
+                         <div class="row mx-auto shadow-lg my-3"  id="start" >
+
+                          <div class="photo">  <img src=../Content/ProductPostImg/${item.productImg}> </div>
+                          <div class="post-text">
+                                <div class="d-flex justify-content-between">
+                                 <a class="btn" role="button" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}"><h3 class="ml-1" id="postName${i}">${item.productName}</h3></a>
+                                  
+                                 </div>
+                                <a class="btn" role="button" href="../../PersonalMarket/Personal_Index_WithoutLogin?UserID=${item.useraccountID}"><h6 id="userName${i}">賣家 :  <span class="font-weight-bolder">${item.userAccount}</span></h6></a>
+                                <div>
+                                <h6 id="text${i}">產品敘述 :  <span class="font-weight-bolder">${item.productDescription}</span></h6>
+                                 </div>
+                                <div class="post-button">
+                                <h6 id="price${i}"> <span class="font-weight-bolder">價位：${item.price}<span>  元</h6>
+                                <a class="btn" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}">查看商品</a>
+                                </div>
+                          </div>
+                        </div>`
+
+                    }
+                    else {
+                        inner += `
+                         <div class="row mx-auto shadow-sm my-2" style="background-color:#F7E7DE" id="start" >
+
+                          <div class="photo">  <img src=../Content/ProductPostImg/${item.productImg}> </div>
+                          <div class="post-text">
+                                <div class="d-flex justify-content-between">
+                                 <a class="btn" role="button" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}"><h3 class="ml-1" id="postName${i}">${item.productName}</h3></a>
+                                    <h6>${item.county}<span class="font-weight-bolder">${item.district}</span></h6>
+                                     </div>
+                                <a class="btn" role="button" href="../../PersonalMarket/Personal_Index_WithoutLogin?UserID=${item.useraccountID}"><h6 id="userName${i}">賣家 :  <span class="font-weight-bolder">${item.userAccount}</span></h6></a>
+                                <div>
+                                <h6 id="text${i}">產品敘述 :  <span class="font-weight-bolder">${item.productDescription}</span></h6>
+                            </div>
+                            <div class="post-button">
+                                <h6 id="price${i}"> <span class="font-weight-bolder">價位：${item.price}<span>  元</h6>
+                                <a class="btn btn-secondary" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}">查看商品</a>
+                         </div>
+                        </div>`
+
+
+                    }
+                    })
+                $(`#collapseComment${index}>div`).html(inner);
+                $(`#cmCount${index}`).html(`${response.length}`)
+            }
+        })
+    } // end check comment function
+
+    $('a>btn-post').click(() => {
+        var test = getCookie('LoginAccount');
+
+
+        if (test == null) {
+
+            alertTest1()
+            setTimeout("home()", 2000)
+            //swal("必須要登入才能發文喔");
+            return window.location.href = `/Members/Login`;
+        }
+
+
+    });
+
+    function alertTest1() {
+        Swal.fire(
+            "必須要登入才能發文喔", //標題
+            " 2秒後自動跳轉...", //訊息內容(可省略)
+            "warning" //圖示(可省略) success/info/warning/error/question
+        );
+    }
+    function home() {
+        window.location.href = "/Members/Login";
+    }
+
+    function sendRequiredPost() {
+
+        var test = getCookie('LoginAccount');
+       
+
+        if (test == null) {
+
+            alertTest1()
+            setTimeout("home()", 2000)
+            //swal("必須要登入才能發文喔");
+            return window.location.href = `/Members/Login`;
+        }
+
+        var form = document.querySelector("#form1")
+        var data = new FormData(form);
+        data.append("county", $(".county").val());
+        data.append("district", $(".district").val());
+
+
+
+        $.ajax({
+            url: "/RequiredPost/sendRequiredPost",
+            type: "Post",
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                swal('成功', '送出成功', 'success');
+             
+                window.location.reload("/RequiredPost/requiredPostIndex")
+
+            }
+        })
+
+    }// end send required post
+
+     //========== report script=====================
+
+    function report() {
+        $.ajax({
+            url: "@Url.Action("getReport","MyOrder")",
+            data: {},
+            type: "GET",
+            success: function (result) {
+                $(".modal-body").html(`
+                <!-- Default dropright button -->
+<p>
+  <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    檢舉標籤
+  </a>
+</p>
+<div class="collapse" id="collapseExample">
+                <div  id="reportTags"class="btn-group">
+
+</div>
+                </div>
+                    </div>
+                    </div>
+                 </div>
+
+                <div id="warning" class="align-content-center">
+                <label ><h3>內容描述</h3></label>
+                </div>
+                <div>
+                <textarea id="reportTXT" rows="15" cols="60"></textarea>
+                </div>
+`);
+
+                $(result).each(function (index, item) {
+                    $("#reportTags").append(`
+<input type="radio"class="btn btn-info " value="${index}"style="border-radius:50px"id="btnradio${index}" required>
+  <label  for="btnradio${index}" class="btn btn-info " value="${index}"style="border-radius:50px" onclick="changeColor()" >
+
+${item.reason}</label>
+                `)
+                })
+
+            }
+        })
+    }
+    //
+    function changeColor() {
+        $(event.target).removeClass("btn-info").addClass("btn-success").siblings().removeClass("btn-success").addClass("btn-info");
+    };
+
+    function saveReport() {
+        //var reportTAG = new Array();
+        //$('input:checked').each(function (i) { reportTAG[i] = $(this).val(); });
+        console.log(`reportTAG=$('input:checked').val()`);
+        var reportTAG = $('input:checked').val() * 1 + 1;
+        if (reportTAG == "NaN") {
+            return false;
+        }
+        $.ajax({
+            url: "@Url.Action("saveReport","MyOrder")",
+            data: { reportTXT: $("#reportTXT").val(), reportTAG: reportTAG  },
+            type: "POST",
+            success: function (result) {
+//                alert("送出成功!!");
+                swal('成功', '送出成功', 'success');
+                setTimeout(function () { $(".close").click() }, 700);
+            },
+            error: function(){
+                swal("失敗","檢舉標籤為必要勾選!!",'error');
+            }
+        })
+    }
+
+
+    //========== report script=====================
+
+
+</script>

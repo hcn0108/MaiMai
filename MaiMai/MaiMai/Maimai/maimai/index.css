@@ -1,0 +1,348 @@
+﻿/*Layout_st Logo*/
+.navbarcontainer > .row > .logo .logo {
+    height: 48px;
+    width: 48px;
+}
+/*Layout_st Home*/
+.btnhome {
+    height: 45px;
+    border-radius: 35px;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    color: #000000;
+}
+/*Layout_st Home*/
+.classhoverin {
+    background-color: #F0F0F0;
+}
+/*Layout_st Home*/
+.btnhome > a {
+    text-decoration: none;
+    color: #000000;
+}
+/*Layout_st Home*/
+.classclick {
+    background-color: #000000;
+    color: white;
+    height: 45px;
+    border-radius: 35px;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+}
+/*=======================================================================*/
+
+/*Layout_st 搜尋*/
+.Ajax-search {
+    height: 45px;
+    width: 900px;
+    background-color:#D0D0D0;
+    /*    border: 1px solid #000000;*/
+    border-radius:35px;
+    /*background-image:url(/Maimai/images/svg/135-search.svg);
+*/
+}
+    .Ajax-search > #Ajax-search {
+        border:0;
+        background-color: #D0D0D0;
+        border-bottom-right-radius:35px;
+        border-top-right-radius:35px;
+        /*    border-radius:35px;*/
+        width: 873px;
+        height: 100%;
+    }
+    .Ajax-search > input {
+        color: transparent;
+        outline: none;
+    }
+        .dropdown > .dropdown-menu {
+            border: 0;
+            left:2%;
+            width: 880px;
+            height: auto;
+        }
+/*Layout_st 搜尋 下拉選單(未使用)*/
+/*.Searchmaimai {
+    padding: 0;
+    margin: 0;
+    width: 900px;*/
+/*height: 50px;*/
+/*max-height: 0;
+    position: relative;
+    left: 0;
+    top: 0;
+    background-color: white;
+    opacity: 1;*/ /*表示完全透明 */
+/*overflow: hidden;
+}*/
+/*Layout_st 搜尋 下拉選單(未使用)*/
+/*.Searchmaimai1 {
+    opacity: 1;
+    max-height: 750px;
+}*/
+.Ajax-search-dropdown-img {
+    height: 84px;
+    width: 192px;
+    border-radius: 15px;
+    position: relative;
+}
+.Ajax-search-dropdown-img > img {
+    height: 84px;
+    width: 192px;
+    border-radius: 15px;
+    position: relative;
+}
+.Ajax-search-dropdown-font {
+    position: absolute;
+    z-index: 2;
+    left: 50px;
+    top: 30px;
+    color: #FFFFFF;
+    font-weight: bold;
+}
+/*=======================================================================*/
+/*Layout_st 地圖鈴鐺*/
+.top3svg > .logo {
+    height: 24px;
+    width: 24px;
+}
+/*鈴鐺 功能切換(使用未成功)*/
+.BellsMenu ul {
+    position: absolute;
+    left: 0;
+    top: 42px;
+    background: rgba(255,255,255,.8);
+    width: 120px;
+    overflow: hidden;
+    opacity: 0;
+    max-height: 0;
+}
+.dropdown-menu {
+height:100%;
+width:50px;
+}
+/*鈴鐺 功能切換(使用未成功)*/
+.BellsMenuAc {
+    border: 0.3px solid skyblue;
+    opacity: 1;
+    max-height: 300px;
+    transform: rotate(-45deg) translate(-9px,7px);
+}
+/*鈴鐺 功能切換*/
+.BellsMenuStyle {
+    width: 100%;
+    height: 80px;
+}
+/*Layout_st 單入大頭貼人像(未使用)*/
+.mylogo {
+    border-radius: 50%;
+    border: 1px solid black;
+    max-width: 50px;
+    height: auto;
+}
+/*Layout_st 下拉清單*/
+.dropdown-menu > .svg > .logo {
+    height: 24px;
+    width: 24px;
+    margin-top: 1rem;
+}
+/*=======================================================================*/
+/*index body 框1*/
+.row > .col-8 .bodr5 {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 0;
+    width: 700px;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+}
+/*index body 框內*/
+.row > .col-8 > .row > .tag {
+    border: 1px solid black;
+    border-radius: 5px;
+    margin: 0;
+    width: auto;
+    height: 45px;
+    text-align: center;
+    background-color: skyblue;
+}
+/*index body 框內 1*/
+.Carouseladvertising {
+    width: 100%;
+    height: 250px;
+    left: 0px;
+    transition: all .5s;
+    margin-left:10px;
+    margin-right: 40px;
+}
+/*index body 框內 2*/
+.Carouseladvertising > .photho {
+        border: 1px solid black;
+        border-radius: 3px;
+        width: 300px;
+        height: 250px;
+}
+    /*index body 框內 照片*/
+.all123 > .photho img {
+    width: 300px;
+    height: 180px;
+}
+/*=======================================================================*/
+/*輪播切換*/
+.slide_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    color: #fff;
+    position: absolute;
+    font-size: 24px;
+}
+#prevSlide {
+    left: 0;
+}
+#nextSlide {
+    right: 0;
+}
+.slide_btn i {
+    color: #6C6C6C;
+    transition: .5s;
+}
+
+.slide_btn:hover i {
+    color: #D9006C;
+}
+
+.theWidth {
+    position: relative;
+}
+@keyframes circle {
+     from {
+        stroke-dashoffset: 200;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+/*布告欄*/
+.circle {
+stroke-dasharray:1194;
+stroke-dashoffset:1194;
+animation-name:circle;
+animation-duration:1s;
+animation-timing-function:linear;
+animation-fill-mode:forwards;
+}
+
+.slide_btn3 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    color: #fff;
+    position: absolute;
+    font-size: 24px;
+}
+#prevSlide3 {
+    left: 0;
+}
+
+#nextSlide3 {
+    right: 0;
+}
+.slide_btn3 i {
+    color: #6C6C6C;
+    transition: .5s;
+}
+
+.slide_btn3:hover i {
+    color: #D9006C;
+}
+
+.theWidth3 {
+    position: relative;
+}
+/*布告欄*/
+
+/*=======================================================================*/
+/*foot_st*/
+.footerLogo {
+    width: 35%;
+    height: 35%;
+}
+
+/*=======================================================================*/
+.btn-outline-dark{border-color:#f8f9fa00;border-radius: 35px;font-weight: bold;}
+.row>.bodr5
+{border: 1px solid black;border-radius: 5px; margin: 0;width: 300px;height: 900px;}
+.row>.bodr5>.bodr5
+{border: 1px solid black;border-radius: 5px; margin: 0;width: 300px;height: 250px;}
+/*=======================================================================*/
+/*六角形狀(未使用)*/
+.sixsideline {
+    position: relative;
+    width: 70px;
+    height: 0;
+    border-width: 0 101px 101px;
+    border-style: solid;
+    border-color: transparent transparent #f69;
+}
+    /*六角形狀(未使用)*/
+    .sixsideline:before {
+        position: absolute;
+        content: "";
+        top: 171px;
+        left: -71px;
+        width: 100px;
+        height: 0;
+        border-width: 101px 101px 0;
+        border-style: solid;
+        border-color: #f69 transparent transparent;
+    }
+    /*六角形狀(未使用)*/
+    .sixsideline:after {
+        position: absolute;
+        content: "";
+        top: 71px;
+        left: -71px;
+        width: 143px;
+        height: 0;
+        border-width: 0 0 101px;
+        background: none;
+        border-style: solid;
+        border-color: transparent transparent #f69;
+    }
+    /*選單改變速度(未使用)*/    
+.transition {
+    transition: 0.4s;
+}
+/*=======================================================================*/
+
+/*TagSearchStyle TAG功能跳轉*/
+/*.TagSearchStyle {
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    border: 1px solid skyblue;
+}*/
+/*TagSearchStyle TAG功能跳轉*/
+.TagSearchImgStyle {
+    width:226px;
+    height: 210px;
+    border-radius: 15px;
+    border: 1px solid #000000
+}
+/*TagSearchStyle TAG功能跳轉*/
+TagSearchImgStyle > p {
+    text-decoration: none;
+    text-size-adjust:150%;
+    color: #000000;
+}
+/*=======================================================================*/

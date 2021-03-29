@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "shoppingCart";
+}
+
+<h2>shoppingCart</h2>
+
+<div class="container">
+    <div class="row col-8 justify-content-end">
+
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $.ajax({
+            url: "@Url.Action("shoppingCart","MyOrder")",
+            data: {orderID:???},
+            type:"GET",
+            success: function (result) {
+
+                $("#show").html("<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>產品ID</th><th>產品名稱</th><th>會員等級</th><th>信箱</th><th>城市</th><th></th></tr></thead> <tbody id='showList'></tbody></table>");
+
+                $(result).each(function (index,item) {
+                    $("#showList").append(`<tr><td>${item.userAccount}</td><td>${item.Name}</td><td>${item.userLevel}</td><td>${item.email}</td><td>${item.city}</td><td><button type='button' class='btn btn-primary' data-toggle='modal' onclick='getMember(${item.UserID})' data-target='#editMember'>編輯</button></td></tr>`);    //刪除按鈕
+                });
+            }
+        })
+
+    });
+
+</script>

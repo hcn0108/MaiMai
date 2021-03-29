@@ -1,0 +1,330 @@
+﻿
+@{
+    ViewBag.Title = "MaimaiIndexNew";
+}
+
+@*style="background-color:#F7E7DE;"*@
+<body>
+    <div style="height:100px;"></div>
+    <div class="container">
+        @*首頁圖片 css內*@
+        <div class="d-flex">
+            <div style="height:130px;width:260px;" id=""><img style="height:100%;width:100%;" src="~/Content/ProductPostImg/廣告1.jpg" /></div>
+            <div style="height:130px;width:260px;" id=""><img style="height:100%;width:100%;" src="~/Content/ProductPostImg/廣告2.jpg" /></div>
+            <div style="height:130px;width:260px;" id=""><img style="height:100%;width:100%;" src="~/Content/ProductPostImg/廣告3.jpg" /></div>
+            <div style="height:130px;width:260px;" id=""><img style="height:100%;width:100%;" src="~/Content/ProductPostImg/廣告4.jpg" /></div>
+            <div style="height:130px;width:260px;" id=""><img style="height:100%;width:100%;" src="~/Content/ProductPostImg/廣告5.jpg" /></div>
+        </div>
+        @*<section class="home">
+        </section>*@
+        @*首頁圖片*@
+        @*TAG*@
+        <div style="height:50px;" id="tag" class="d-flex"></div>
+        @*TAG*@
+        @*五星*@
+        <div class="container-fluid paddding mb-5">
+            <div class="col-md-10" style="padding-left:185px;">
+                <div class="mb-5 StarFiveStyle"> <p>好評商家作品推薦</p></div>
+                <div class="row" id="StarFive2">
+
+                </div>
+            </div>
+        </div>
+        @*五星*@
+        <div></div>
+        @*徵求台輪播*@
+        <div class="row mb-lg-3">
+            <div class="col-md-12 ">
+                <div class="d-flex" style="background: linear-gradient(#FFB4A2,#E5989B);border-radius:5px;">
+                    <p class="mb-2 col-3" style="font-weight: bold; font-size: 18px; font-family: fantasy;">徵求台</p>
+                    <p class="col-6"></p>
+                    @*@Html.ActionLink("更多", "requiredPostIndexWithLogin", "RequiredPost", null, new { @class = "" })*@
+                    <a class="mt-3 col-3" style="left:18%;" href="~/RequiredPost/requiredPostIndex">更多>></a>
+                </div>
+                <div class="carousel slide multi-item-carousel active " id="theCarousel2">
+                    <div class="carousel-inner  d-md-flex theWidth2 mt-3" id="NewAddCarousel">
+                    </div>
+                    <div id="NewprevSlide" class="slide_btn">
+                        <i class="fa fa-caret-left"></i>
+                    </div>
+                    <div id="NewnextSlide" class="slide_btn ">
+                        <i class="fa fa-caret-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*徵求台輪播*@
+        <div class="d-flex" style=" width:900px;       margin-left: 90px;
+        box-shadow: -3px -3px 3px #7B7B7B;">
+            <div style="height:280px;width:450px;">
+                <img class="imgimg2" src="~/Content/ProductPostImg/咖啡1.jpg" />
+            </div>
+            <div>
+                <img class="imgimg2" src="~/Content/ProductPostImg/咖啡2.jpg" />
+            </div>
+        </div>
+        <div class="mt-5" style="height:100px;"></div>
+        @*最新商品輪播*@
+        <div class="row mt-lg-3">
+            <div class="col-md-12 ">
+                <div class="d-flex" style="        background: linear-gradient(#FFB4A2,#E5989B);border-radius:5px;">
+                    <p class="mb-2 col-3" style="font-weight: bold; font-size: 18px; font-family: fantasy;">最新商品</p>
+                    <p class="col-6"></p>
+                    <a class="mt-3 col-3" style="left:15%;" href="~/NewMaimaiIndex/ProuductpostAll">更多商品>></a>
+                </div>
+                <div class="carousel slide multi-item-carousel active " id="theCarousel">
+                    <div class="carousel-inner  d-md-flex theWidth " id="addCarousel">
+                        <!--  Example item start -->
+                        @*<div class="item mx-md-2 Carouseladvertising">
+                            <div class="col-xs-4"><a href="#1"><img src="https://source.unsplash.com/300x300/?perth,australia" class="img-responsive"></a></div>
+                        </div>
+                        <div class="item mx-md-2 Carouseladvertising">
+                            <div class="col-xs-4"><a href="#1"><img src="https://source.unsplash.com/300x300/?fremantle,australia" class="img-responsive"></a></div>
+                        </div>
+                        <div class="item mx-md-2 ">
+                            <div class="col-xs-4"><a href="#1"><img src="https://source.unsplash.com/300x300/?west-australia" class="img-responsive"></a></div>
+                        </div>
+                        <div class="item mx-md-2 ">
+                            <div class="col-xs-4"><a href="#1"><img src="https://source.unsplash.com/300x300/?perth" class="img-responsive"></a></div>
+                        </div>
+                        <div class="item mx-md-2 ">
+                            <div class="col-xs-4"><a href="#1"><img src="https://source.unsplash.com/300x300/?quokka,perth" class="img-responsive"></a></div>
+                        </div>
+                        <div class="item mx-md-2 ">
+                            <div class="col-xs-4"><a href="#1"><img src="https://source.unsplash.com/300x300/?margaretriver,australia" class="img-responsive"></a></div>
+                        </div>
+                        <div class="item mx-md-2 ">
+                            <div class="col-xs-4"><a href="#1"><img src="https://source.unsplash.com/300x300/?perth,australia&r=7"
+                            class="img-responsive"></a></div>
+                        </div>*@
+                        <!--  Example item end -->
+
+                    </div>
+                    <div id="prevSlide" class="slide_btn">
+                        <i class="fa fa-caret-left"></i>
+                    </div>
+                    <div id="nextSlide" class="slide_btn ">
+                        <i class="fa fa-caret-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*最新商品輪播*@
+    </div>
+    <script>
+        function CarouselClick(PostID) {
+            window.open(`/RequiredPost/requiredSingalPage?rqID=${PostID} `, 'MAIMAI徵求台');
+            //window.location.href = `/NewMaimaiIndex/ProdutPost?PostID=${PostID}`;
+            console.log(ProductPostID);
+        }
+        function tagonclick(TagID) {
+            window.location.href = `/MaimaiIndex/tagsearch?TagID=${TagID}`;
+        }
+
+        function toRequiredPostView() {
+            var test = getCookie('LoginAccount');
+            console.log(test)
+            if (test == "") {
+                window.location.href = `/RequiredPost/requiredPostIndexWithLogin`;
+            }
+            window.location.href = `/RequiredPost/requiredPostIndex`;
+        }
+        $(function () {
+          //五星圖片刊版
+            //$.ajax({
+            //    url: "/NewMaimaiIndex/StarFive",
+            //    type: "GET",
+            //    success: function (StarFive) {
+            //        $(StarFive).each(function (i, item) {
+            //            if (i == 0) {
+            //                $("#StarFive").prepend(`
+            //                <div class="col-md-6 col-12 paddding animate-box" data-animate-effect="fadeIn">
+            //                    <div class="fh5co_suceefh5co_height">
+            //                        <img src="../Content/ProductPostImg/member/${item.img}" alt="img" />
+            //                            <div class="fh5co_suceefh5co_height_position_absolute"></div>-->
+            //        文字
+            //                            <!--<div class="fh5co_suceefh5co_height_position_absolute_font">
+            //                            <div class="">
+            //                             <a href="#" class="color_fff">
+            //                            <i class="fa fa-clock-o"></i>&nbsp;&nbsp;"${item.userAccount}"</a>
+            //                            </div>
+            //                            <div class="">
+            //                            <a href="single.html" class="fh5co_good_font">
+            //                                    After all is said and done, more is
+            //                                        said than done
+            //                            </a>
+            //                        </div>
+            //                    </div>-->
+            //        文字
+            //    <!--</div>
+            //</div>`)
+            //            }
+            //        })
+            //    }
+            //})
+
+            $.ajax({
+                url: "/NewMaimaiIndex/StarFive",
+                type: "GET",
+                success: function (StarFive2) {
+                    $(StarFive2).each(function (i, item) {
+                        if (i >=1 && i<=6 ) {
+                            $("#StarFive2").append(`
+                        <div class="start6" >
+                                        <img style="height:100%;width:100%;"  src="../Content/ProductPostImg/${item.img}"  />
+                        </div>
+                            `)
+                        }
+                    })
+                }
+            })
+
+          //五星圖片刊版
+            //徵求台輪播增加圖片
+            $.ajax({
+                url: "/NewMaimaiIndex/NewaddCarousel",
+                type: "GET",
+                success: function (NewAddCarousel) {
+                    $(NewAddCarousel).each(function (i, item) {
+                        $("#NewAddCarousel").append(`
+                        <div class="item mx-md-2 NewCarouseladvertising" onclick="CarouselClick(${item.RequiredPostID})">
+                                <div class="col-xs-4">
+                                    <a href="#1" >
+                                             <div class="img-responsive "  style="background-image:url(../Content/resource_nico/images/徵求台POST/${item.postImg})
+                                                            ;height: 200px; width: 200px;background-size:cover;"></div>
+                                            <div>名稱 : ${item.postName}</div>
+                                            <div>金額 : ${item.estimatePrice}</div>
+                                       </a>
+                                </div>
+                        </div>
+                    `)
+                    })
+                    NewliftCar();
+                }
+            })
+            //徵求台輪播增加圖片
+
+            //function toProdutPostView(){
+            //    var testpost = getCookie('LoginAccount');
+            //    console.log(testpost)
+            //    if (testpost == "") {
+            //        window.location.href = `/NewMaimaiIndex/MaimaiIndexNew`;
+            //    }
+            //    window.location.href = `/NewMaimaiIndex/ProdutPost`;
+            //}
+            //function getCookie(cookieName) {
+            //    var name = cookieName + "=";
+            //    var ca = document.cookie.split(';');
+            //    for (var i = 0; i < ca.length; i++) {
+            //        var c = ca[i];
+            //        while (c.charAt(0) == ' ') c = c.substring(1);
+            //        if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            //    }
+            //    return "";
+            //}
+          //輪播增加圖片
+            $.ajax({
+                url: "/NewMaimaiIndex/addCarousel",
+                type: "GET",
+                success: function (addCarousel) {
+                    $(addCarousel).each(function (i, item) {
+                        $("#addCarousel").append(`
+                        <div class="item mx-md-2 Carouseladvertising"onclick="CarouselClick(${item.ProductPostID})">
+                                <div class="col-xs-4">
+                                    <a href="#">
+                                             <div class="img-responsive "  style="background-image:url(../Content/ProductPostImg/${item.productImg})
+                                                            ;height: 200px; width: 200px;background-size:cover;"></div>
+                                            <div style="text-overflow: ellipsis;">${item.productDescription}</div>
+                                            <div>${item.price}</div>
+                                       </a>
+                                </div>
+                        </div>
+                    `)
+                    })
+                    liftCar();
+                }
+            })
+            //輪播增加圖片
+            //tagID
+
+            function getCookie(cookieName) {
+                var name = cookieName + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1);
+                    if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+                }
+                return "";
+            }
+
+            $(function () {
+                $.ajax({
+                    url: "/MaimaiIndex/TagResult",
+                    type: "GET",
+                    success: function (response) {
+                        $(response).each(function (i, item) {
+                            $("#tag").append(
+                                `<div class="tag ml-3 my-2 "onclick="tagonclick(${item.TagID})">
+                                        <a><p>${item.tagName}</p></a>
+                                    </div>`
+                            )
+                        })
+                    }
+                })
+            })
+            //tagID
+        })
+    </script>
+
+    @*輪播*@
+    <script>
+        function liftCar() {
+            let slideNum = 0;
+            let slideCount = $(".Carouseladvertising").length;
+            let lastIndex = slideCount - 1;
+            let slidemove;
+            function show() {
+                slidemove = 0 - 200 * slideNum;
+                $(".theWidth").css("left", slidemove);
+            }
+            $("#prevSlide").click(function () {
+                slideNum--;
+                if (slideNum < 0) slideNum = lastIndex;
+                show();
+            })
+            $("#nextSlide").click(function () {
+                slideNum++;
+                if (slideNum > lastIndex) slideNum = 0;
+                show();
+            })
+        }
+    </script>
+    @*輪播*@
+    @*新商品輪播*@
+    <script>
+        function NewliftCar() {
+            let slideNum = 0;
+            let slideCount = $(".NewCarouseladvertising").length;
+            let lastIndex = slideCount - 1;
+            let slidemove;
+            function show() {
+                slidemove = 0 - 200 * slideNum;
+                $(".theWidth2").css("left", slidemove);
+            }
+            $("#NewprevSlide").click(function () {
+                slideNum--;
+                if (slideNum < 0) slideNum = lastIndex;
+                show();
+            })
+            $("#NewnextSlide").click(function () {
+                slideNum++;
+                if (slideNum > lastIndex) slideNum = 0;
+                show();
+            })
+        }
+
+    </script>
+    @*新商品輪播*@
+</body>
+

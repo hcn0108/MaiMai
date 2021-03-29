@@ -1,0 +1,280 @@
+﻿
+@{
+    ViewBag.Title = "backstageIndex";
+}
+
+@*<h2>backstageIndex</h2>*@
+
+
+<style>
+    .fade {
+        opacity: 1;
+    }
+</style>
+
+<div class="container" style="margin-top:100px">
+    <div class="row">
+        <div class="col-2" id="backstage">
+            @*<a class="btn btn-primary mb-3 btn-block" data-toggle="collapse" href="#member_P" role="button"
+               aria-expanded="false" aria-controls="member_P">會員管理</a>
+            <div class="collapse mb-3" id="member_P" data-parent="#backstage">
+                <a class="d-block btn" onclick="getMemberList()">所有會員</a>
+                <a class="d-block btn" onclick="getAdminLlist()">管理員</a>
+            </div>*@
+
+            <a class="btn btn-primary mb-3 btn-block" data-toggle="collapse" href="#order_P" role="button"
+               aria-expanded="false" aria-controls="order_P">我的訂單</a>
+            <div class="collapse mb-3" id="order_P" data-parent="#backstage">
+                @*<a class="d-block btn" onclick="getOrderList()">所有訂單</a>*@
+                <a id="completedBTN"class="d-block btn" onclick="getCompleteOrder()">已完成訂單</a>
+                <a id="uncompletedBTN"class="d-block btn" onclick="getUnCompleteOrder()">未完成訂單</a>
+            </div>
+        </div>
+
+        <div class="col-10">
+            <div id="show">
+            </div>
+
+            @*modal dialog*@  
+            <div class="modal fade" id="editMember" tabindex="-1" role="dialog" aria-labelledby="editMemberTitle"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editMemberTitle">會員資訊</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="editMemberbody">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="editMemberLevel()">儲存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="editOrder" tabindex="-1" role="dialog" aria-labelledby="editOrderTitle"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editOrderTitle">商品資訊</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" id="editOrderbody">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+        @*function getMemberList() {
+            $.ajax({
+                url: "@Url.Action("getMemberList_P", "MyOrder")",
+                type: "GET",
+                success: function (memberList) {
+                    $("#show").html("<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>帳號</th><th>姓名</th><th>會員等級</th><th>信箱</th><th>城市</th><th></th></tr></thead> <tbody id='showList'></tbody></table>");
+                    $(memberList).each(function(index, item){
+                        $("#showList").append(`<tr><td>${item.userAccount}</td><td>${item.Name}</td><td>${item.userLevel}</td><td>${item.email}</td><td>${item.city}</td><td><button type='button' class='btn btn-primary' data-toggle='modal' onclick='getMember(${item.UserID})' data-target='#editMember'>查看</button></td></tr>`);
+                    });
+                }
+            })
+        }
+
+        function getMember(id) {
+            $.ajax({
+                url: "@Url.Action("getMember_P", "MyOrder")",
+                data: {id:id },
+                type: "GET",
+                success: function (member) {
+                    $(member).each(function (index, member) {
+                        var birthdayMilliseconds = parseInt(member.birthday.replace(/\D/igm, ""));
+                        var biryear = new Date(birthdayMilliseconds).getFullYear();
+                        var birmonth = new Date(birthdayMilliseconds).getMonth()+1;
+                        var birdate = new Date(birthdayMilliseconds).getDate();
+                        $("#editMemberbody").html(`<form><div class='d-flex justify-content-center'><label>會員編號<input name="UserID" class='form-control' type='text' value = "${member.UserID}" readonly/><label>會員帳號<input name="userAccount" class='form-control' type='text' value = "${member.userAccount}" readonly/><label>城市<input name="city" class='form-control' type='text' value = "${member.city}" readonly/><label>地址<input name="address" class='form-control' type='text' value = "${member.address}" readonly/><label>信箱<input name="email" class='form-control' type='text' value = "${member.email}" readonly/><label>電話<input name="phoneNumber" class='form-control' type='text' value = "${member.phoneNumber}" readonly/><label>姓名<input class='form-control' type='text' value = "${member.Name}" readonly/><label>生日<input class='form-control' name="birthday" type='text' value = "${biryear}-${birmonth}-${birdate}" readonly/><label>身分證字號<input class='form-control' type='text' name="identityNumber" value = "${member.identityNumber}" readonly/><label>大頭貼<input class='form-control' type='text' name="profileImg" value = "${member.profileImg}" readonly/><label>會員等級<select id="inputState" class="form-control" name="userLevel">
+                            <option value="${member.userLevel}">${member.userLevelString}</option>
+                            <option value="1">管理員</option>
+                            <option value="2">優質會員</option>
+                            <option value="3">一般會員</option>
+                            </select><label>總評分<input class='form-control' type='text' name="totalStarRate" value = "${member.totalStarRate}" readonly/><label>自我介紹<textarea class='form-control' rows="5" cols="30"  style="resize:none" name="selfDescription" readonly>${member.selfDescription}</textarea><input type="hidden" name="userPassWord" value="${member.userPassWord}"/><input type="hidden" name="firstName" value="${member.firstName}"/><input type="hidden" name="lastName" value="${member.lastName}"/></div</form>`)
+
+                    })
+                }
+            })
+    }
+
+    function getAdminLlist() {
+        $.ajax({
+            url: "@Url.Action("getAdminList_P", "MyOrder")",
+            type: "GET",
+            data: {userLevel:"1"},
+            success: function (memberList) {
+                $("#show").html("<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>帳號</th><th>姓名</th><th>會員等級</th><th>信箱</th><th>城市</th><th></th></tr></thead> <tbody id='showList'></tbody></table>");
+                $(memberList).each(function (index, item) {
+                    $("#showList").append(`<tr><td>${item.userAccount}</td><td>${item.Name}</td><td>${item.userLevel}</td><td>${item.email}</td><td>${item.city}</td><td><button type='button' class='btn btn-primary' data-toggle='modal' onclick='getMember(${item.UserID})' data-target='#editMember'>查看</button></td></tr>`);
+                });
+            }
+        })
+    }*@
+
+    @*function editMemberLevel() {
+        var form = document.querySelector("form");
+        var formdata = new FormData(form);
+        $.ajax({
+            url: "@Url.Action("editUserLevel_P", "MyOrder")",
+            type: "POST",
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function (order) {
+                alert("儲存成功");
+                //$('#editMemberbody').modal('hide')
+                    getMemberList();
+                }
+            })
+        }*@
+
+        @*function getOrderList() {
+            $.ajax({
+                url: "@Url.Action("getOrderList_P", "MyOrder")",
+                type: "GET",
+                success: function (orderList) {
+                    $("#show").html("<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>訂單編號</th><th>建立時間</th><th>價錢</th><th>訂單狀態</th><th></th></tr></thead> <tbody id='showList'></tbody></table>")
+                    $(orderList).each(function (index, orderList) {
+                        var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
+                        var year = new Date(Milliseconds).getFullYear();
+                        var month = new Date(Milliseconds).getMonth() + 1;
+                        var date = new Date(Milliseconds).getDate();
+                        $("#showList").append(`<tr><td>${orderList.OrderId}</td><td>${year}-${month}-${date}</td><td>$${orderList.price}</td><td>${orderList.orderStatus}</td><td><button type='button' class='btn btn-primary' onclick='getOrderDetail(${orderList.OrderId},${orderList.orderStatus})'>查看</button></td></tr>`)
+                    })
+                }
+            })
+    }*@
+
+    function getCompleteOrder() {
+        $.ajax({
+            url: "@Url.Action("getOrderList_P", "MyOrder")",
+            type: "GET",
+            data: {status:"2"},
+            success: function (orderList) {
+                $("#completedBTN").addClass("bg-info text-white");
+                $("#uncompletedBTN").removeClass("bg-info text-white");
+
+                $("#show").html("<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>訂單編號</th><th>建立時間</th><th>價錢</th><th>訂單狀態</th><th></th></tr></thead> <tbody id='showList'></tbody></table>")
+                $(orderList).each(function (index, orderList) {
+                    var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
+                    var year = new Date(Milliseconds).getFullYear();
+                    var month = new Date(Milliseconds).getMonth() + 1;
+                    var date = new Date(Milliseconds).getDate();
+                    $("#showList").append(`<tr><td>${orderList.OrderId}</td><td>${year}-${month}-${date}</td><td>${orderList.price}</td><td>已完成</td><td><button type='button' class='btn btn-primary' onclick='getOrderDetail(${orderList.OrderId},${orderList.orderStatus})'>查看</button></td></tr>`)
+                })
+            }
+        })
+    }
+
+    function getUnCompleteOrder() {
+        $.ajax({
+            url: "@Url.Action("getOrderList_P", "MyOrder")",
+            type: "GET",
+            data: {status:"0"},
+            success: function (orderList) {
+                $("#completedBTN").removeClass("bg-info text-white");
+                $("#uncompletedBTN").addClass("bg-info text-white");
+
+                $("#show").html("<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>訂單編號</th><th>建立時間</th><th>價錢</th><th>訂單狀態</th><th></th></tr></thead> <tbody id='showList'></tbody></table>")
+                $(orderList).each(function (index, orderList) {
+                    var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
+                    var year = new Date(Milliseconds).getFullYear();
+                    var month = new Date(Milliseconds).getMonth() + 1;
+                    var date = new Date(Milliseconds).getDate();
+                    $("#showList").append(`<tr><td>${orderList.OrderId}</td><td>${year}-${month}-${date}</td><td>$${orderList.price}</td><td>未完成</td><td><button type='button' class='btn btn-primary' onclick='getOrderDetail(${orderList.OrderId},${orderList.orderStatus})'>查看</button></td></tr>`)
+                })
+            }
+        })
+    }
+
+
+    function getOrderDetail(OrderId, orderStatus) {
+            $.ajax({
+                url: "@Url.Action("getOrderDetail_P", "MyOrder")",
+                type: "GET",
+                data: { OrderId: OrderId},
+                success: function (order) {
+                    $("#show").html(`<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>商品名稱</th><th>總價</th><th>數量</th><th>建立時間</th><th>賣家</th><th></th></tr></thead> <tbody id='showList'></tbody></table><div class='d-flex justify-content-center'></div>`)
+                    if (orderStatus < 2) {
+                        $("#show").append(`<a class='btn btn-danger' onclick="delOrder(${OrderId})">刪除此訂單</a>`)
+                    }
+                    $(order).each(function (index, order) {
+                        var Milliseconds = parseInt(order.createdTime.replace(/\D/igm, ""));
+                        var year = new Date(Milliseconds).getFullYear();
+                        var month = new Date(Milliseconds).getMonth() + 1;
+                        var date = new Date(Milliseconds).getDate();
+                        var hour = new Date(Milliseconds).getHours();
+                        var min = new Date(Milliseconds).getMinutes();
+                        var sec = new Date(Milliseconds).getSeconds();
+                        $("#showList").append(`<tr><td>${order.productName}</td><td>${order.oneProductTotalPrice}</td><td>${order.QTY}</td><td>${year}-${month}-${date} ${hour}:${min}:${sec}</td><td>${order.SellerName}</td><td><button type='button' class='btn btn-primary' data-toggle='modal'  data-target='#editOrder' onclick="getProductPost(${order.ProductPostID},${order.QTY})">查看</button></td></tr>`)
+                    })
+                }
+            })
+    }
+
+    function delOrder(OrderId) {
+        if (window.confirm("確定刪除?"))
+        {
+        $.ajax({
+            url: "@Url.Action("delOrder_P", "MyOrder")",
+            type: "GET",
+            data: { OrderId: OrderId },
+            success: function (order) {
+                window.alert("刪除成功")
+            }
+        })
+        }
+        else
+            return false;
+    }
+
+
+    function getProductPost( ProductPostID, QTY) {
+            $.ajax({
+                url: "@Url.Action("getProduct_P", "MyOrder")",
+                type: "GET",
+                data: { ProductPostID: ProductPostID, QTY: QTY},
+                success: function (product) {
+                    $(product).each(function (index, product) {
+                        var Milliseconds = parseInt(product.createdTime.replace(/\D/igm, ""));
+                        var year = new Date(Milliseconds).getFullYear();
+                        var month = new Date(Milliseconds).getMonth() + 1;
+                        var date = new Date(Milliseconds).getDate();
+                        var hour = new Date(Milliseconds).getHours();
+                        var min = new Date(Milliseconds).getMinutes();
+                        var sec = new Date(Milliseconds).getSeconds();
+                        $("#editOrderbody").html(`<div class='d-flex justify-content-center'><label>商品編號<input class='form-control' type='text' value="${product.ProductPostID}" readonly /><label>商品名稱<input class='form-control' type='text' value="${product.productName}" readonly/><label>商品描述<input class='form-control' type='text' value="${product.productDescription}" readonly/><label>商品照片<input class='form-control' type='text' value="${product.productImg}" readonly/><label>建立者<input class='form-control' type='text' value="${product.UserName}" readonly/><label>數量<input class='form-control' type='text' value="${product.QTY}" readonly/><label>價錢<input class='form-control' type='text' value="${product.price}" readonly/><label>標籤<input class='form-control' type='text' value="${product.Tag}" readonly/><label>建立時間<input class='form-control' type='text' value="${year}-${month}-${date} ${hour}:${min}:${sec}" readonly/></div>`)
+                    })
+                    }
+            })
+         }
+
+
+
+
+</script>

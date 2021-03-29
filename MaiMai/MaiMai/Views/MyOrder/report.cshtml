@@ -1,0 +1,118 @@
+﻿
+@{
+    ViewBag.Title = "report";
+
+}
+
+<style>
+
+    input[type=radio] {
+        display: none;
+    }
+
+    label {
+        margin: 0 6px;
+        margin-bottom: 20px;
+    }
+</style>
+<div class="container " style="padding-top:100px; ">
+
+
+    <h2>report</h2>
+
+
+    <!-- Button trigger modal -->
+    <img style="height:50px" src="https://www.flaticon.com/svg/vstatic/svg/1500/1500374.svg?token=exp=1615444750~hmac=5271c46b193004b97eac5b164883dddf" class="btn " data-toggle="modal" onclick="report()" data-target="#exampleModalCenter">
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalCenterTitle">檢舉內容</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span id="modalSpan" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                    <button id="submit" onclick="saveReport()" type="button" class="btn btn-primary">送出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+    function report() {
+        $.ajax({
+            url: "@Url.Action("getReport","MyOrder")",
+            data: {},
+            type: "GET",
+            success: function (result) {
+                $(".modal-body").html(`
+                <!-- Default dropright button -->
+<p>
+  <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+    檢舉標籤
+  </a>
+</p>
+<div class="collapse" id="collapseExample">
+                <div  id="reportTags"class="btn-group">
+                </div>
+</div>
+
+
+
+                <div id="warning" class="align-content-center">
+                <label ><h3>內容描述</h3></label>
+                </div>
+                <div>
+                <textarea id="reportTXT" rows="15" cols="60"></textarea>
+                </div>
+`);
+
+                $.each(result, function (index, item) {
+                    $("#reportTags").append(`
+<input type="radio"class="btn btn-info " value="${index}"style="border-radius:50px"id="btnradio${index}" required>
+  <label  for="btnradio${index}" class="btn btn-info " value="${index}"style="border-radius:50px" onclick="changeColor()" >
+${item.reason}</label>
+                `)
+                })
+
+            }
+        })
+    }
+
+    function changeColor() {
+        $(event.target).removeClass("btn-info").addClass("btn-success").siblings().removeClass("btn-success").addClass("btn-info");
+    };
+
+    function saveReport() {
+        //var reportTAG = new Array();
+        //$('input:checked').each(function (i) { reportTAG[i] = $(this).val(); });
+        console.log(`reportTAG=$('input:checked').val()`);
+        var reportTAG = $('input:checked').val() * 1 + 1;
+        if (reportTAG == "NaN") {
+            return false;
+        }
+        $.ajax({
+            url: "@Url.Action("saveReport","MyOrder")",
+            data: { reportTXT: $("#reportTXT").val(), reportTAG: reportTAG  },
+            type: "POST",
+            success: function (result) {
+                swal('成功', '送出成功', 'success');
+                setTimeout(function () { $(".close").click() }, 700);
+            },
+            error: function(){
+                swal("失敗","檢舉標籤為必要勾選!!",'error');
+            }
+        })
+    }
+
+</script>

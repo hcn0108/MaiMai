@@ -1,0 +1,171 @@
+﻿
+@{
+    ViewBag.Title = "requiredSingalPage";
+}
+
+<div class="container" style="padding: 100px 10px 10px 10px ; background-color: #FBEFF4; border-radius:20px ">
+    <div class="shadow-lg d-flex" style="height:800px" >
+
+        <div class=" card col-5 w-100 h-100 py-5" style="border:1px solid black;" id="page-left">
+            @*<img class="photo mr-3" />
+
+        <h6 class="my-1">貼文名稱:</h6><input class="ml-2 form-control" type="text" required name="postName" id="postName">
+        <div>
+
+            <img style="border-radius:50%; width:30px;height:30px" />
+            <h6 class="my-1"> 買家 : <span class="font-weight-bolder"></span></h6>
+        </div>
+        <h6 class="my-1">貼文描述:</h6><textarea class="ml-2 form-control" id="postDescription" name="postDescription" placeholder="使用程度、幾成新" required onclick="tag()"></textarea>
+        <h6 class="my-1"> 大概徵求價位：<span class="font-weight-bolder"></span>  元</h6>
+        <div>
+            <span></span>
+            <span></span>
+        </div>
+        <span>建立時間: </span>*@
+
+        </div>
+
+        <div class="card col-7 h-100" style="border:1px solid black">
+            <div id="commentBox" class ="h-100" style="overflow-y:scroll">
+
+
+            </div>
+
+           
+
+        </div>
+
+
+          
+
+       
+
+    </div>
+ </div>
+
+
+@*containerEnd*@
+
+<script>
+        
+      $(function() {
+
+                var getUrlString = location.href;
+                var url = new URL(getUrlString);
+                var getRquiredPostID = url.searchParams.get("rqID");
+
+
+          var text = "";
+        
+
+                $.ajax({
+                    type: "POST",
+                    url: "/RequiredPost/getsingalPost",
+                    data: {
+                        requiredPostID: getRquiredPostID
+                    },
+                    success: function (data) {
+
+
+                        var Milliseconds = parseInt(data.postTime.replace(/\D/igm, ""));
+                        var year = new Date(Milliseconds).getFullYear();
+                        var month = new Date(Milliseconds).getMonth() + 1;
+                        var date = new Date(Milliseconds).getDate();
+
+
+                        text += `
+                
+                     
+                            <div class="photo" style="height:300px">
+                            <img class="w-100 h-100" src="../Content/resource_nico/images/徵求台POST/${data.postImg}"> 
+                            </div>
+
+
+                            <h6 class="my-5">貼文名稱 : <span class="font-weight-bolder">${data.postName}</span></h6>
+                               <div class="d-flex">
+                             <img style="border-radius:50%; width:50px;height:50px" src="../Content/ProductPostImg/member/${data.userAvrta}"/>
+
+                            <a onclick="window.open('../../PersonalMarket/Personal_Index_WithoutLogin?UserID=${data.UserID}','${data.userAccount}的賣場')" href="#"><h6 class="my-3 mx-3"> 買家 :  <span class="font-weight-bolder">${data.userAccount}</span></h6><a>
+                            </div>
+                            <h6 class="my-3">貼文描述 :  <span class="font-weight-bolder">${data.postDescription}</span></h6>
+                            <h6 class="my-3"> 大概徵求價位：<span class="font-weight-bolder">${data.estimatePrice}</span>  元</h6>
+                             <div class="my-5">
+                            <span>${data.county}</span><span>${data.district}</span>
+                            </div>
+                            <span>建立時間 : ${year} - ${month} - ${date}</span>
+
+                      
+            
+                            `
+                        $("#page-left").html(text);
+
+                    },
+                    error: function (data) {
+
+                        Swal.fire("失敗", data, 'error');
+                    }
+                });
+
+          var inner = "";
+
+          $.ajax({
+              url: "/RequiredPost/checkAllComment",
+              type: "Post",
+              data: { data: getRquiredPostID },
+              success: function (response) {
+                  $(response).each(function (i, item) {
+
+                      if (item.county == null) {
+                          inner += `
+                         <div class="row mx-auto shadow-lg my-3"  id="start">
+
+                          <div style="width:100px">
+                           <img class="w-100" src="../Content/ProductPostImg/${item.productImg}"> </div>
+                          <div class="post-text">
+                                <div class="d-flex justify-content-between">
+                                 <a class="btn" role="button" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}"><h3 class="ml-1" id="postName${i}">${item.productName}</h3></a>
+                                  
+                                 </div>
+                                <a class="btn" role="button" href="../../PersonalMarket/Personal_Index_WithoutLogin?UserID=${item.useraccountID}"><h6 id="userName${i}">賣家 :  <span class="font-weight-bolder">${item.userAccount}</span></h6></a>
+                                <div>
+                                <h6 id="text${i}">產品敘述 :  <span class="font-weight-bolder">${item.productDescription}</span></h6>
+                                 </div>
+                                <div class="post-button">
+                                <h6 id="price${i}"> <span class="font-weight-bolder">價位：${item.price}<span>  元</h6>
+                                <a class="btn" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}">查看商品</a>
+                                </div>
+                          </div>
+                        </div>`
+
+                      }
+                      else {
+                          inner += `
+                         <div class="row mx-auto shadow-sm my-2" style="background-color:#F7E7DE" id="start">
+
+                          <div  style="width:100px">  <img src="../Content/ProductPostImg/${item.productImg}"> </div>
+                          <div class="post-text">
+                                <div class="d-flex justify-content-between">
+                                 <a class="btn" role="button" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}"><h3 class="ml-1" id="postName${i}">${item.productName}</h3></a>
+                                    <h6>${item.county}<span class="font-weight-bolder">${item.district}</span></h6>
+                                     </div>
+                                <a class="btn" role="button" href="../../PersonalMarket/Personal_Index_WithoutLogin?UserID=${item.useraccountID}"><h6 id="userName${i}">賣家 :  <span class="font-weight-bolder">${item.userAccount}</span></h6></a>
+                                <div>
+                                <h6 id="text${i}">產品敘述 :  <span class="font-weight-bolder">${item.productDescription}</span></h6>
+                            </div>
+                            <div class="post-button">
+                                <h6 id="price${i}"> <span class="font-weight-bolder">價位：${item.price}<span>  元</h6>
+                                <a class="btn btn-secondary" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}">查看商品</a>
+                         </div>
+                        </div>`
+
+
+                      }
+                     
+                  })
+                  $(`#commentBox`).html(inner);
+                  
+              }
+          })
+
+            })//document ready 
+</script>

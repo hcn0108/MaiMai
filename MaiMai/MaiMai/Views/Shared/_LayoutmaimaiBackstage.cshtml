@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaiMai買買</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <link href="~/Maimai/layout/css/layout.css" rel="stylesheet" />
+    <link href="~/Maimai/layout/css/style_1.css" rel="stylesheet" />
+    <link href="~/Content/Cart_css/Cart.css" rel="stylesheet" />
+    <link href="~/Content/Backstage_css/backstage.css" rel="stylesheet" />
+
+    @*Pagination*@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.css" integrity="sha512-QmxybGIvkSI8+CGxkt5JAcGOKIzHDqBMs/hdemwisj4EeGLMXxCm9h8YgoCwIvndnuN1NdZxT4pdsesLXSaKaA==" crossorigin="anonymous" />
+    <title>@Page.Title</title>
+    @RenderSection("head", required: false)
+</head>
+
+
+<body class="container">
+    <nav class="nav1 ">
+        <div class=" row">
+            @*layout左邊*@
+            <div class=" d-flex mt-3 ml-2">
+                <div class="logo">
+                    <a class="d-flex" href="/">
+                        <img class="HeardLogo" src="~/Maimai/images/svg/maimaiTOPLOGO.svg" />
+                    </a>
+                </div>
+                <div class="MaiMai mt-2 ">
+                    <a>
+                        <p> MaiMai </p>
+                    </a>
+                </div>
+            </div>
+            @*layout左邊*@
+            <div class="" style="width:800px"></div>
+            @*layout右邊*@
+            <div id="mainListDiv" class="main_list" style="">
+                <div class="navlinks d-flex mt-3">
+                    
+                    
+                <div class="dropdown mt-1">
+                    <button class="dropdown-toggle btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownMenuLogin">
+                        <svg width="28" height="28" viewBox="0 0 24 24" >
+                            <g id="组_21" data-name="组 21" transform="translate(-503.347 98.687)">
+                                <path id="Path_140" data-name="Path 140"d="M507.347-75.687a8,8,0,0,1,8-8,8,8,0,0,1,8,8h-2a6,6,0,0,0-6-6,6,6,0,0,0-6,6Zm8-10a6,6,0,0,1-6-6,6,6,0,0,1,6-6,6,6,0,0,1,6,6A6,6,0,0,1,515.347-85.687Zm0-2a4,4,0,0,0,4-4,4,4,0,0,0-4-4,4,4,0,0,0-4,4A4,4,0,0,0,515.347-87.687Z"
+                                      fill="#7B7B7B"></path>
+                            </g>
+                        </svg>
+                    </button> @*會員圖示 end*@
+
+                    @*登入end*@
+                    @if (Request.Cookies["LoginName"] == null)
+                    {
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLogin">
+                            <li> @Html.ActionLink("註冊", "SignUp", "Members", null, new { @class = "dropdown-item" })</li>
+                            <li>@Html.ActionLink("登入", "Login", "Members", null, new { @class = "dropdown-item" })</li>
+                        </ul>
+                    }
+                    else
+                    {
+                        @*<span class=" mx-2">
+            @Request.Cookies["LoginName"].Value
+            </span>*@
+
+                    <div class="dropdown-menu" style="padding-top:unset;">
+                    <div style="background-color: #E0E0E0"><h5 class="text-center" style="font-weight:bolder;color:	#5B5B5B">個人帳戶管理</h5></div>
+                    @Html.ActionLink("個人資料", "myAccountIndex", "MyAccount", null, new { @class = "dropdown-item" })
+                    @Html.ActionLink("我的訂單", "OrderIndex", "OrderManager", null, new { @class = "dropdown-item" })
+                   
+
+
+                    <div class="dropdown-divider"style="margin-bottom:unset;"></div>
+                    <div style="background-color: #E0E0E0"><h5 class="text-center" style="font-weight:bolder;color:	#5B5B5B">個人賣場管理</h5></div>
+                    @Html.ActionLink("個人賣場", "Personal_Index", "PersonalMarket", null, new { @class = "dropdown-item" })
+                    @Html.ActionLink("賣場交易訂單", "salesOrderIndex", "OrderManager", null, new { @class = "dropdown-item" })
+                    @Html.ActionLink("徵求台", "requiredPostIndexWithLogin", "RequiredPost", null, new { @class = "dropdown-item" })
+
+
+                    <div class="dropdown-divider"></div>
+                    @if (Convert.ToInt32(Request.Cookies["MemberLevel"].Value) == 1)
+                    {
+                        @Html.ActionLink("後台管理員", "backstageIndex", "backstage", null, new { @class = "dropdown-item" })
+                         }
+                    @Html.ActionLink("登出", "Logout", "Members", null, new { @class = "dropdown-item" , style = "font-weight:bolder;color:#FFB5B5" })
+                </div>
+
+
+                    
+                    }
+                </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    @RenderBody()
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+            integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+            integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+            crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paginationjs/2.1.5/pagination.min.js" integrity="sha512-1zzZ0ynR2KXnFskJ1C2s+7TIEewmkB2y+5o/+ahF7mwNj9n3PnzARpqalvtjSbUETwx6yuxP5AJXZCpnjEJkQw==" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="~/Scripts/jquery.signalR-2.4.1.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+
+    <script>
+        //Michael singalR add start>>>>>
+        var chat = $.connection.chatHub;
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

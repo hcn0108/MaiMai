@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "commentForm";
+}
+<style>
+    img[src*="star"]{
+        width:30px;
+        margin:0 10px;
+    }
+</style>
+<div class="container " style="padding-top:100px; ">
+
+    <h2>commentForm</h2>
+
+    <!-- Button trigger modal -->
+    <button class="btn btn-warning" data-toggle="modal" onclick="getComment()" data-target="#exampleModalCenter">回饋單</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="exampleModalCenterTitle">評分與評論</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span id="modalSpan" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="modal-body" class="modal-body" style="margin-bottom:30px">
+                    <div style="text-align:center" class="mb-5">
+                        <img src="" />
+                    
+                    </div>
+                    <h4>請問您對這次交易的滿意度為 :</h4>
+                    <div id="div0" style="width:auto">
+                        <img id="img0" src="../Content/ProductPostImg/member/star.jfif" />
+                        <img id="img1" src="../Content/ProductPostImg/member/star.jfif" />
+                        <img id="img2" src="../Content/ProductPostImg/member/star.jfif" />
+                        <img id="img3" src="../Content/ProductPostImg/member/star.jfif" />
+                        <img id="img4" src="../Content/ProductPostImg/member/star.jfif" />
+                        <p>   </p>
+                    </div>
+
+                    <div style="border-bottom:solid 1px black" class=" pb-5 pt-3 mb-3">
+                    <div class="progress " >
+                        <div id="progress-bar" class="progress-bar progress-bar-striped bg-success " role="progressbar" style="width: 25%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5">25%.....
+                        </div>
+                    </div>
+                    <span id="commentCNT">評分人數</span>
+                    </div>
+
+                    <div id="warning" class="align-content-center mt-5">
+                        <label>內容描述</label>
+                    </div>
+                    <div>
+                        <textarea id="commentTXT" rows="15" cols="60"></textarea>
+                    </div>
+                   
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                    <button id="submit" onclick="saveComment()" type="button" class="btn btn-primary">送出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        var starRate;
+                        $(function () {
+                            // 星星評等
+                            $("#div0").find("img").on({
+                                mouseenter: function () {
+                                    $(this).prop("src", "../Content/ProductPostImg/member/chngstar.jfif");
+                                    $(this).prevAll().attr("src", "../Content/ProductPostImg/member/chngstar.jfif");
+                                    $("#div0 p").text("評分為......." + ($(this).index() + 1) + "分，雙擊滑鼠送出");
+               
+                                },
+                                mouseout: function () {
+                                    $(this).prop("src", "../Content/ProductPostImg/member/star.jfif");
+                                    $(this).nextAll().attr("src", "../Content/ProductPostImg/member/star.jfif")
+                                }
+                                ,
+                                dblclick: function () {
+                                    $("#div0").find("img").off("mouseenter");
+                                    $("#div0").find("img").off("mouseout");
+                                    $("#div0").off("mouseout");
+                                    $("#div0 p").text("評分完成......" + ($(this).index() + 1) + "分");
+                                    starRate = $(this).index() + 1;
+                                },
+                            });
+                                $("#div0").mouseout(function () {
+                                    $(this).children("img").prop("src", "../Content/ProductPostImg/member/star.jfif");
+                                    $("#div0 p").text("評分中.......");
+                                })
+                         });
+
+    //OrderID:3 獲得目前評價
+        function getComment() {
+        $.ajax({
+            url: "@Url.Action("getComment","MyOrder")",
+            data: { OrderDetailID:25},
+            type: "GET",
+            success: function (result) {
+                var CNT = result.CNT;
+                var starTotal = result.starTotal;
+                var starAVG = 0;
+
+                if (CNT==0)
+                {
+                    starAVG = 0;
+                }
+                else
+                {
+                    starAVG = starTotal / CNT;
+                }
+                console.log('result ',result);
+                console.log("img",`${result.img}`);
+                console.log("starTotal", `${result.starTotal}`);
+                console.log("starAVG得分",`${starAVG}`);
+
+                $("#commentCNT").text(`已經有${result.CNT}人評分`);
+                $("#modal-body img").eq(0).attr("src", `../Content/ProductPostImg/member/${result.img}`);
+                $("#progress-bar").css("width", `${starAVG * 20}%`).prop("aria-valuenow", `${starAVG}`).text(`${starAVG }`);
+            },
+        })
+    }
+     
+        function saveComment() {
+            console.log(starRate);
+           
+        $.ajax({
+            url: "@Url.Action("saveComment", "MyOrder")",
+            data: {  OrderID:"40", starRate: starRate, description: $(`#commentTXT`).val()},
+            type: "GET",
+            success: function (result) {
+            swal('成功', '感謝您寶貴的意見', 'success');
+                setTimeout(function () { $(".close").click() }, 700);
+            },
+            error: function(){
+            swal("失敗","星星滿意度為必要勾選!!",'error');
+            }
+            })
+            }
+
+
+    </script>
