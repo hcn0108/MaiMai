@@ -36,15 +36,24 @@
                     <a class="d-block btn" onclick="getDelProducts()">下架商品</a>
                 </div>
 
-                <a class="btn btncss mb-3 btn-block " data-toggle="collapse" href="#info_P" role="button" onclick="information()">發送通知</a>
-                <div class="collapse" id="info_P" data-parent="#backstage"></div>
+                @*<a class="btn btncss mb-3 btn-block" data-toggle="collapse" href="#report_P" role="button" onclick="RequirePost()">徵求文列表</a>
+                <div class="collapse" id="report_P" data-parent="#backstage"></div>*@
 
-                <a class="btn btncss mb-3 btn-block" data-toggle="collapse" href="#tag_P" role="button" onclick="getTag()">新增標籤</a>
-                <div class="collapse" id="tag_P" data-parent="#backstage"></div>
+                <a class="btn btncss mb-3 btn-block" data-toggle="collapse" href="#requirePostList"  role="button"
+                   aria-expanded="false" aria-controls="product_P">徵求文列表</a>
+                <div class="collapse mb-3" id="requirePostList" data-parent="#backstage">
+                    <a class="d-block btn" onclick="RequirePost()">上架徵求文</a>
+                    <a class="d-block btn" onclick="RequirePost_OffSale()">下架徵求文</a>
+                </div>
 
                 <a class="btn btncss mb-3 btn-block" data-toggle="collapse" href="#report_P" role="button" onclick="reportList()">檢舉列表</a>
                 <div class="collapse" id="report_P" data-parent="#backstage"></div>
 
+                <a class="btn btncss mb-3 btn-block" data-toggle="collapse" href="#tag_P" role="button" onclick="getTag()">新增標籤</a>
+                <div class="collapse" id="tag_P" data-parent="#backstage"></div>
+
+                <a class="btn btncss mb-3 btn-block " data-toggle="collapse" href="#info_P" role="button" onclick="information()">發送通知</a>
+                <div class="collapse" id="info_P" data-parent="#backstage"></div>
 
             </div>
         </div>
@@ -52,7 +61,7 @@
         <div class="col-12 col-lg-10">
 
             @*更新部分頁面*@
-            <div id="show">
+            <div id="show" class="showCss">
             </div>
 
             <div class="modal fade" id="editMember" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
@@ -109,6 +118,7 @@
 
                         </div>
                         <div class="modal-footer">
+                            <a id="cancelProd"></a>
                             <button type="button" class="btn btn_close" data-dismiss="modal">關閉</button>
                         </div>
 
@@ -132,7 +142,29 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn_close" data-dismiss="modal">關閉</button>
                             <a id="report-footer"></a>
+                            <a id="reportToProductPost"></a>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="requirePost" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="requirePosttitle">徵求文明細</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="requirePostbody">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn_close" data-dismiss="modal">關閉</button>
+                            <a id="requestPost-footer"></a>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -154,9 +186,49 @@
                 url: "@Url.Action("getMemberList_P", "backstage")",
                 type: "GET",
                 success: function (memberList) {
-                    $("#show").html("<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>編號</th><th>帳號</th><th>姓名</th><th>會員等級</th><th>信箱</th><th></th></tr></thead> <tbody id='showList'></tbody></table>");
-                    $(memberList).each(function(index, item){
-                        $("#showList").append(`<tr><td>${item.UserID}</td><td>${item.userAccount}</td><td>${item.Name}</td><td>${item.userLevelString}</td><td>${item.email}</td><td><button type='button' class='btn btncss_inside' data-toggle='modal' onclick='getMember(${item.UserID})' data-target='#editMember'>查看</button></td></tr>`);
+                    $("#show").html(`
+                    <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="search_member()">搜尋</button></div>
+                    <table class='table table-hover'>
+                    <thead class='table-dark'>
+                    <tr id='showTh'> <th>編號</th><th>帳號</th><th>姓名</th><th>會員等級</th><th>信箱</th><th></th></tr></thead>
+                    <tbody id='showList'></tbody>
+                    </table>`).pagination({
+                        dataSource: memberList,
+                        pageSize: 8,
+                        callback: function (data) {
+                            $("#showList").html("");
+                            $(data).each(function (index, item) {
+                                $("#showList").append(`<tr><td>${item.UserID}</td><td>${item.userAccount}</td><td>${item.Name}</td><td>${item.userLevelString}</td><td>${item.email}</td><td><button type='button' class='btn btncss_inside' data-toggle='modal' onclick='getMember(${item.UserID})' data-target='#editMember'>查看</button></td></tr>`);
+                            });
+                        }
+                    });
+                }
+            })
+        }
+
+        //search Member
+        function search_member() {
+            var search = $("#search_generic").val();
+            $.ajax({
+                url: "@Url.Action("getSearchMemberList_P", "backstage")",
+                data: { search: search},
+                type: "GET",
+                success: function (memberList) {
+                    $("#show").html(`
+                    <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="search_member()">搜尋</button></div>
+                    <table class='table table-hover'>
+                    <thead class='table-dark'>
+                    <tr id='showTh'> <th>編號</th><th>帳號</th><th>姓名</th><th>會員等級</th><th>信箱</th><th></th></tr></thead>
+                    <tbody id='showList'></tbody>
+                    </table>`).pagination({
+                        dataSource: memberList,
+                        pageSize: 8,
+                        callback: function (data) {
+                            $("#showList").html("");
+                            $(data).each(function (index, item) {
+                                $("#showList").append(`<tr><td>${item.UserID}</td><td>${item.userAccount}</td><td>${item.Name}</td><td>${item.userLevelString}</td><td>${item.email}</td><td><button type='button' class='btn btncss_inside' data-toggle='modal' onclick='getMember(${item.UserID})' data-target='#editMember'>查看</button></td></tr>`);
+                            });
+                        }
                     });
                 }
             })
@@ -233,9 +305,15 @@
             type: "GET",
             data: {userLevel:"1"},
             success: function (memberList) {
-                $("#show").html("<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>帳號</th><th>姓名</th><th>會員等級</th><th>信箱</th><th>城市</th><th></th></tr></thead> <tbody id='showList'></tbody></table>");
-                $(memberList).each(function (index, item) {
-                    $("#showList").append(`<tr><td>${item.userAccount}</td><td>${item.Name}</td><td>${item.userLevelString}</td><td>${item.email}</td><td>${item.city}</td><td><button type='button' class='btn btncss_inside' data-toggle='modal' onclick='getMember(${item.UserID})' data-target='#editMember'>查看</button></td></tr>`);
+                $("#show").html("<div class='d-flex justify-content-center' id='search'></div> <table class='table table-hover'><thead class='table-dark'><tr id='showTh'> <th>帳號</th><th>姓名</th><th>會員等級</th><th>信箱</th><th>城市</th><th></th></tr></thead> <tbody id='showList'></tbody></table>").pagination({
+                    dataSource: memberList,
+                    pageSize: 8,
+                    callback: function (data) {
+                        $("showList").html("");
+                        $(data).each(function (index, item) {
+                            $("#showList").append(`<tr><td>${item.userAccount}</td><td>${item.Name}</td><td>${item.userLevelString}</td><td>${item.email}</td><td>${item.city}</td><td><button type='button' class='btn btncss_inside' data-toggle='modal' onclick='getMember(${item.UserID})' data-target='#editMember'>查看</button></td></tr>`);
+                        });
+                    }
                 });
             }
         })
@@ -256,8 +334,7 @@
                     "",
                     "success"
                 );
-                //alert("儲存成功");
-                $('#editMemberbody').modal('hide')
+                //$('#editMemberbody').modal('hide');
                     getMemberList();
                 }
             })
@@ -269,7 +346,7 @@
                 type: "GET",
                 success: function (orderList) {
                     $("#show").html(`
-                                        <div class= 'd-flex justify-content-center' id = 'search' ></div >
+                                        <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="search_order()">搜尋</button></div>
                                         <table class='table table-hover'>
                                             <thead class='table-dark'>
                                                 <tr id='showTh'>
@@ -283,21 +360,25 @@
                                                 </tr>
                                             </thead>
                                             <tbody id='showList'></tbody>
-                                        </table>`)
-                    $(orderList).each(function (index, orderList) {
-                        var orderStatus = "";
-                        switch (orderList.orderStatus) {
-                            case 0: orderStatus = "已下單"; break;
-                            case 1: orderStatus = "已結帳"; break;
-                            case 2: orderStatus = "已評論"; break;
-                            case 3: orderStatus = "已完成"; break;
-                            case 4: orderStatus = "已取消"; break;
-                        }
-                        var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
-                        var year = new Date(Milliseconds).getFullYear();
-                        var month = new Date(Milliseconds).getMonth() + 1;
-                        var date = new Date(Milliseconds).getDate();
-                        $("#showList").append(`
+                                        </table>`).pagination({
+                                            dataSource: orderList,
+                                            pageSize: 8,
+                                            callback: function (data) {
+                                                $("#showList").html("");
+                                                $(data).each(function (index, orderList) {
+                                                    var orderStatus = "";
+                                                    switch (orderList.orderStatus) {
+                                                        case 0: orderStatus = "已下單"; break;
+                                                        case 1: orderStatus = "已結帳"; break;
+                                                        case 2: orderStatus = "已評論"; break;
+                                                        case 3: orderStatus = "已完成"; break;
+                                                        case 4: orderStatus = "已取消"; break;
+                                                    }
+                                                    var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
+                                                    var year = new Date(Milliseconds).getFullYear();
+                                                    var month = new Date(Milliseconds).getMonth() + 1;
+                                                    var date = new Date(Milliseconds).getDate();
+                                                    $("#showList").append(`
                                                                 <tr>
                                                                 <td>${orderList.OrderId}</td>
                                                                 <td>${year}-${month}-${date}</td>
@@ -307,10 +388,69 @@
                                                                 <td>${orderStatus}</td>
                                                                 <td><button type='button' class='btn btncss_inside' onclick='getOrderDetail(${orderList.OrderId},${orderList.orderStatus})'>查看</button></td>
                                                                 </tr>`)
-                    })
+                                                })
+                                            }
+                                        })
                 }
             })
-    }
+        }
+
+        function search_order() {
+            var search = $("#search_generic").val();
+            $.ajax({
+                url: "@Url.Action("getSearchOrderList_P", "backstage")",
+                data: { search: search},
+                type: "GET",
+                success: function (orderList) {
+                    $("#show").html(`
+                                        <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="search_order()">搜尋</button></div>
+                                        <table class='table table-hover'>
+                                            <thead class='table-dark'>
+                                                <tr id='showTh'>
+                                                    <th>訂單編號</th>
+                                                    <th>建立時間</th>
+                                                    <th>買方</th>
+                                                    <th>買方姓名</th>
+                                                    <th>價錢</th>
+                                                    <th>訂單狀態</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id='showList'></tbody>
+                                        </table>`).pagination({
+                                            dataSource: orderList,
+                                            pageSize: 8,
+                                            callback: function (data) {
+                                                $("#showList").html("");
+                                                $(data).each(function (index, orderList) {
+                                                    var orderStatus = "";
+                                                    switch (orderList.orderStatus) {
+                                                        case 0: orderStatus = "已下單"; break;
+                                                        case 1: orderStatus = "已結帳"; break;
+                                                        case 2: orderStatus = "已評論"; break;
+                                                        case 3: orderStatus = "已完成"; break;
+                                                        case 4: orderStatus = "已取消"; break;
+                                                    }
+                                                    var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
+                                                    var year = new Date(Milliseconds).getFullYear();
+                                                    var month = new Date(Milliseconds).getMonth() + 1;
+                                                    var date = new Date(Milliseconds).getDate();
+                                                    $("#showList").append(`
+                                                                <tr>
+                                                                <td>${orderList.OrderId}</td>
+                                                                <td>${year}-${month}-${date}</td>
+                                                                <td>${orderList.buyerUserID}</td>
+                                                                <td>${orderList.buyerName}</td>
+                                                                <td>$${orderList.price}</td>
+                                                                <td>${orderStatus}</td>
+                                                                <td><button type='button' class='btn btncss_inside' onclick='getOrderDetail(${orderList.OrderId},${orderList.orderStatus})'>查看</button></td>
+                                                                </tr>`)
+                                                })
+                                            }
+                                        })
+                }
+            })
+        }
 
     function getCompleteOrder() {
         $.ajax({
@@ -325,21 +465,25 @@
                                     <tr id='showTh'> <th>訂單編號</th><th>建立時間</th><th>買方</th><th>買方姓名</th><th>價錢</th><th>訂單狀態</th><th></th></tr>
                                     </thead>
                                     <tbody id='showList'></tbody>
-                                    </table>`)
-                $(orderList).each(function (index, orderList) {
-                        var orderStatus = "";
-                        switch (orderList.orderStatus) {
-                            case 0: orderStatus = "已下單"; break;
-                            case 1: orderStatus = "已結帳"; break;
-                            case 2: orderStatus = "已評論"; break;
-                            case 3: orderStatus = "已完成"; break;
-                            case 4: orderStatus = "已取消"; break;
-                        }
-                    var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
-                    var year = new Date(Milliseconds).getFullYear();
-                    var month = new Date(Milliseconds).getMonth() + 1;
-                    var date = new Date(Milliseconds).getDate();
-                    $("#showList").append(`
+                                    </table>`).pagination({
+                                        dataSource: orderList,
+                                        pageSize: 8,
+                                        callback: function (data) {
+                                            $("#showList").html("");
+                                            $(data).each(function (index, orderList) {
+                                                var orderStatus = "";
+                                                switch (orderList.orderStatus) {
+                                                    case 0: orderStatus = "已下單"; break;
+                                                    case 1: orderStatus = "已結帳"; break;
+                                                    case 2: orderStatus = "已評論"; break;
+                                                    case 3: orderStatus = "已完成"; break;
+                                                    case 4: orderStatus = "已取消"; break;
+                                                }
+                                                var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
+                                                var year = new Date(Milliseconds).getFullYear();
+                                                var month = new Date(Milliseconds).getMonth() + 1;
+                                                var date = new Date(Milliseconds).getDate();
+                                                $("#showList").append(`
                                                     <tr>
                                                     <td>${orderList.OrderId}</td>
                                                     <td>${year}-${month}-${date}</td>
@@ -349,7 +493,9 @@
                                                     <td>${orderStatus}</td>
                                                     <td><button type='button' class='btn btncss_inside' onclick='getOrderDetail(${orderList.OrderId},${orderList.orderStatus})'>查看</button></td>
                                                     </tr>`)
-                })
+                                            })
+                                        }
+                                    })
             }
         })
     }
@@ -367,21 +513,25 @@
                                                             <tr id='showTh'> <th>訂單編號</th><th>建立時間</th><th>買方</th><th>買方姓名</th><th>價錢</th><th>訂單狀態</th><th></th></tr>
                                                         </thead>
                                                     <tbody id='showList'></tbody>
-                                                </table>`)
-                $(orderList).each(function (index, orderList) {
-                    var orderStatus = "";
-                    switch (orderList.orderStatus) {
-                        case 0: orderStatus = "已下單"; break;
-                        case 1: orderStatus = "已結帳"; break;
-                        case 2: orderStatus = "已評論"; break;
-                        case 3: orderStatus = "已完成"; break;
-                        case 4: orderStatus = "已取消"; break;
-                    }
-                    var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
-                    var year = new Date(Milliseconds).getFullYear();
-                    var month = new Date(Milliseconds).getMonth() + 1;
-                    var date = new Date(Milliseconds).getDate();
-                    $("#showList").append(`
+                                                </table>`).pagination({
+                                                    dataSource: orderList,
+                                                    pageSize: 8,
+                                                    callback: function (data) {
+                                                        $("#showList").html("");
+                                                        $(data).each(function (index, orderList) {
+                                                            var orderStatus = "";
+                                                            switch (orderList.orderStatus) {
+                                                                case 0: orderStatus = "已下單"; break;
+                                                                case 1: orderStatus = "已結帳"; break;
+                                                                case 2: orderStatus = "已評論"; break;
+                                                                case 3: orderStatus = "已完成"; break;
+                                                                case 4: orderStatus = "已取消"; break;
+                                                            }
+                                                            var Milliseconds = parseInt(orderList.createdTime.replace(/\D/igm, ""));
+                                                            var year = new Date(Milliseconds).getFullYear();
+                                                            var month = new Date(Milliseconds).getMonth() + 1;
+                                                            var date = new Date(Milliseconds).getDate();
+                                                            $("#showList").append(`
                                                         <tr>
                                                         <td>${orderList.OrderId}</td>
                                                         <td>${year}-${month}-${date}</td>
@@ -391,7 +541,9 @@
                                                         <td>${orderStatus}</td>
                                                         <td><button type='button' class='btn btncss_inside' onclick='getOrderDetail(${orderList.OrderId},${orderList.orderStatus})'>查看</button></td>
                                                         </tr>`)
-                })
+                                                        })
+                                                    }
+                                                })
             }
         })
     }
@@ -515,6 +667,8 @@
                                                 <div class="col-md-12 col-lg-6">
                                                 <textarea id="infotext" style="resize:none" cols="50" rows="10" placeholder="請輸入通知內容"></textarea>
                                                 <input class="btn btn_info" value="發送" onclick="pushInfo()"/>
+                                                <input class="btn btn-block " value="All_Demo" onclick="AllDemo()"/>
+                                                <input class="btn btn-block" value="One_Demo" onclick="OneDemo()"/>
                                                 </div>
                                                 <div id="pushrecord" class="col-md-12 col-lg-6">
                                                     <span style="color:#6C6C6C">發送紀錄</span>
@@ -561,7 +715,19 @@
                 })
             }
         })
-    }
+        }
+
+     //AllDemo
+        function AllDemo() {
+            $("#searchID").val(`ALL`);
+            $("#infotext").html(`系統將於今日4/14，晚間11:59，進行維護，預計時間兩個小時`);
+        }
+
+        //OneDemo
+        function OneDemo() {
+            $("#searchID").val(`14`);
+            $("#infotext").html(`請注意，違規次數過多`);
+        }
 
     //發通知
     function pushInfo() {
@@ -662,7 +828,7 @@
             type: "GET",
             success: function (allProduct) {
                 $("#show").html(`
-                                            <div class='d-flex justify-content-center' id='search'></div>
+                                            <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="getSearchAllPorducts_P()">搜尋</button></div>
                                                     <table class='table table-hover'>
                                                         <thead class='table-dark'>
                                                             <tr id='showTh'><th>商品編號</th><th>商品名稱</th><th>價錢</th><th>庫存</th><th>建立時間</th><th></th></tr>
@@ -671,18 +837,21 @@
                                                         </tbody>
                                                     </table>
                                                 <div class='d-flex justify-content-center'></div>
-                                    `)
+                                    `).pagination({
+                                        dataSource: allProduct,
+                                        pageSize: 8,
+                                        callback: function (data) {
+                                            $("#showList").html("");
+                                            $(data).each(function (index, allproduct) {
+                                                var Milliseconds = parseInt(allproduct.createdTime.replace(/\D/igm, ""));
+                                                var year = new Date(Milliseconds).getFullYear();
+                                                var month = new Date(Milliseconds).getMonth() + 1;
+                                                var date = new Date(Milliseconds).getDate();
+                                                var hour = new Date(Milliseconds).getHours();
+                                                var min = new Date(Milliseconds).getMinutes();
+                                                var sec = new Date(Milliseconds).getSeconds();
 
-                $(allProduct).each(function (index, allproduct) {
-                    var Milliseconds = parseInt(allproduct.createdTime.replace(/\D/igm, ""));
-                    var year = new Date(Milliseconds).getFullYear();
-                    var month = new Date(Milliseconds).getMonth() + 1;
-                    var date = new Date(Milliseconds).getDate();
-                    var hour = new Date(Milliseconds).getHours();
-                    var min = new Date(Milliseconds).getMinutes();
-                    var sec = new Date(Milliseconds).getSeconds();
-
-                    $("#showList").append(`
+                                                $("#showList").append(`
                                             <tr data-toggle='modal'  data-target='#editProduct' onclick="getProductPostFromAll(${allproduct.ProductPostID})">
                                                     <td>${allproduct.ProductPostID}</td>
                                                     <td>${allproduct.productName}</td>
@@ -694,10 +863,62 @@
                                                     </td>
                                                     </tr>
                                                 `)
-                })
+                                            })
+                                        }
+                                    })
             }
         })
-    }
+        }
+
+        function getSearchAllPorducts_P() {
+            var search = $("#search_generic").val();
+            $.ajax({
+                url: "@Url.Action("getSearchAllPorducts_P", "backstage")",
+                data: { search: search},
+                type: "GET",
+                success: function (allProduct) {
+                    $("#show").html(`
+                                                <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="getSearchAllPorducts_P()">搜尋</button></div>
+                                                        <table class='table table-hover'>
+                                                            <thead class='table-dark'>
+                                                                <tr id='showTh'><th>商品編號</th><th>商品名稱</th><th>價錢</th><th>庫存</th><th>建立時間</th><th></th></tr>
+                                                            </thead>
+                                                            <tbody id='showList'>
+                                                            </tbody>
+                                                        </table>
+                                                    <div class='d-flex justify-content-center'></div>
+                                        `).pagination({
+                                            dataSource: allProduct,
+                                            pageSize: 8,
+                                            callback: function (data) {
+                                                $("#showList").html("");
+                                                $(data).each(function (index, allproduct) {
+                                                    var Milliseconds = parseInt(allproduct.createdTime.replace(/\D/igm, ""));
+                                                    var year = new Date(Milliseconds).getFullYear();
+                                                    var month = new Date(Milliseconds).getMonth() + 1;
+                                                    var date = new Date(Milliseconds).getDate();
+                                                    var hour = new Date(Milliseconds).getHours();
+                                                    var min = new Date(Milliseconds).getMinutes();
+                                                    var sec = new Date(Milliseconds).getSeconds();
+
+                                                    $("#showList").append(`
+                                                <tr data-toggle='modal'  data-target='#editProduct' onclick="getProductPostFromAll(${allproduct.ProductPostID})">
+                                                        <td>${allproduct.ProductPostID}</td>
+                                                        <td>${allproduct.productName}</td>
+                                                        <td>${allproduct.price}</td>
+                                                        <td>${allproduct.inStoreQTY}</td>
+                                                        <td>${year}-${month}-${date} ${hour}:${min}:${sec}</td>
+                                                        <td>
+                                                        <button type='button' class='btn btn_del' onclick="cancelProduct(${allproduct.ProductPostID})">下架此商品</button>
+                                                        </td>
+                                                        </tr>
+                                                    `)
+                                                })
+                                            }
+                                        })
+                }
+            })
+        }
 
     function getProductPostFromAll(ProductPostID) {
         $.ajax({
@@ -741,6 +962,11 @@
                                                     <label>建立時間<input class='form-control' type='text' value="${year}-${month}-${date} ${hour}:${min}:${sec}" readonly/></div></label>
                                                 </div>
                                                 `)
+                    if (oneProduct.status == 1) {
+                        $("#cancelProd").html(`<button type='button' class='btn btn_del' onclick="cancelProduct(${oneProduct.ProductPostID})">下架此商品</button>`);
+                    } else {
+                        $("#cancelProd").html("");
+                    }
                 })
             }
         })
@@ -781,42 +1007,94 @@
             type: "GET",
             success: function (allProduct) {
                 $("#show").html(`
-                                            <div class='d-flex justify-content-center' id='search'></div>
+                                            <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="getSearchDelProducts_P()">搜尋</button></div>
                                                     <table class='table table-hover'>
                                                         <thead class='table-dark'>
-                                                            <tr id='showTh'><th>商品編號</th><th>商品名稱</th><th>價錢</th><th>庫存</th><th>建立時間</th><th></th></tr>
+                                                            <tr id='showTh'><th>商品編號</th><th>商品名稱</th><th>價錢</th><th>庫存</th><th>建立時間</th></tr>
                                                         </thead>
                                                         <tbody id='showList'>
                                                         </tbody>
                                                     </table>
                                                 <div class='d-flex justify-content-center'></div>
-                                    `)
+                                    `).pagination({
+                                        dataSource: allProduct,
+                                        pageSize: 8,
+                                        callback: function (data) {
+                                            $("#showList").html("");
+                                            $(data).each(function (index, allproduct) {
+                                                var Milliseconds = parseInt(allproduct.createdTime.replace(/\D/igm, ""));
+                                                var year = new Date(Milliseconds).getFullYear();
+                                                var month = new Date(Milliseconds).getMonth() + 1;
+                                                var date = new Date(Milliseconds).getDate();
+                                                var hour = new Date(Milliseconds).getHours();
+                                                var min = new Date(Milliseconds).getMinutes();
+                                                var sec = new Date(Milliseconds).getSeconds();
 
-                $(allProduct).each(function (index, allproduct) {
-                    var Milliseconds = parseInt(allproduct.createdTime.replace(/\D/igm, ""));
-                    var year = new Date(Milliseconds).getFullYear();
-                    var month = new Date(Milliseconds).getMonth() + 1;
-                    var date = new Date(Milliseconds).getDate();
-                    var hour = new Date(Milliseconds).getHours();
-                    var min = new Date(Milliseconds).getMinutes();
-                    var sec = new Date(Milliseconds).getSeconds();
-
-                    $("#showList").append(`
+                                                $("#showList").append(`
                                             <tr data-toggle='modal'  data-target='#editProduct' onclick="getProductPostFromAll (${allproduct.ProductPostID})">
                                                     <td>${allproduct.ProductPostID}</td>
                                                     <td>${allproduct.productName}</td>
                                                     <td>${allproduct.price}</td>
                                                     <td>${allproduct.inStoreQTY}</td>
-                                                    <td>${year}-${month}-${date} ${hour}:${min}:${sec}</td>
-                                                    <td>
-                                                    <button type='button' class='btn btncss_inside' onclick="getProductPostFromAll(${allproduct.ProductPostID})">查看</button>
-                                                    </td>
+                                                    <td>${year}-${month}-${date} ${hour}:${min}:${sec}</td>                                                    
                                                     </tr>
                                                 `)
-                })
+                                            })
+                                        }
+                                    })
             }
         })
-    }
+        }
+
+        function getSearchDelProducts_P() {
+            var search = $("#search_generic").val();
+            $.ajax({
+                url: "@Url.Action("getSearchDelProducts_P", "backstage")",
+                data: { search: search},
+                type: "GET",
+                success: function (allProduct) {
+                    $("#show").html(`
+                                                <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="getSearchDelProducts_P()">搜尋</button></div>
+                                                        <table class='table table-hover'>
+                                                            <thead class='table-dark'>
+                                                                <tr id='showTh'><th>商品編號</th><th>商品名稱</th><th>價錢</th><th>庫存</th><th>建立時間</th><th></th></tr>
+                                                            </thead>
+                                                            <tbody id='showList'>
+                                                            </tbody>
+                                                        </table>
+                                                    <div class='d-flex justify-content-center'></div>
+                                        `).pagination({
+                                            dataSource: allProduct,
+                                            pageSize: 8,
+                                            callback: function (data) {
+                                                $("#showList").html("");
+                                                $(data).each(function (index, allproduct) {
+                                                    var Milliseconds = parseInt(allproduct.createdTime.replace(/\D/igm, ""));
+                                                    var year = new Date(Milliseconds).getFullYear();
+                                                    var month = new Date(Milliseconds).getMonth() + 1;
+                                                    var date = new Date(Milliseconds).getDate();
+                                                    var hour = new Date(Milliseconds).getHours();
+                                                    var min = new Date(Milliseconds).getMinutes();
+                                                    var sec = new Date(Milliseconds).getSeconds();
+
+                                                    $("#showList").append(`
+                                                <tr data-toggle='modal'  data-target='#editProduct' onclick="getProductPostFromAll (${allproduct.ProductPostID})">
+                                                        <td>${allproduct.ProductPostID}</td>
+                                                        <td>${allproduct.productName}</td>
+                                                        <td>${allproduct.price}</td>
+                                                        <td>${allproduct.inStoreQTY}</td>
+                                                        <td>${year}-${month}-${date} ${hour}:${min}:${sec}</td>
+                                                        <td>
+                                                        <button type='button' class='btn btncss_inside' onclick="getProductPostFromAll(${allproduct.ProductPostID})">查看</button>
+                                                        </td>
+                                                        </tr>
+                                                    `)
+                                                })
+                                            }
+                                        })
+                }
+            })
+        }
 
     //檢舉頁面
     function reportList() {
@@ -825,7 +1103,7 @@
                 type: "GET",
                 success: function (report) {
                     $("#show").html(`
-                                    <div class= 'd-flex justify-content-center' id = 'search' ></div >
+                                    <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="getReportList_P()">搜尋</button></div>
                                         <table class='table table-hover'>
                                             <thead class='table-dark'>
                                                 <tr id='showTh'>
@@ -839,38 +1117,107 @@
                                             </thead>
                                         <tbody id='showList'></tbody>
                                     </table>`);
-                    $(report).each(function (index, item) {
-                        var reportStatus = "";
-                        if (item.reportStatus == 0)
-                            reportStatus = "未處理";
-                        else
-                            reportStatus = "已處理";
-                        var Milliseconds = parseInt(item.createdTime.replace(/\D/igm, ""));
-                        var year = new Date(Milliseconds).getFullYear();
-                        var month = new Date(Milliseconds).getMonth() + 1;
-                        var date = new Date(Milliseconds).getDate();
-                        var hour = new Date(Milliseconds).getHours();
-                        var min = new Date(Milliseconds).getMinutes();
-                        var sec = new Date(Milliseconds).getSeconds();
+                    $("#show").pagination({
+                        dataSource: report,
+                        pageSize: 8,
+                        callback: function (data) {
+                            $("#showList").html("");
+                            $(data).each(function (index, item) {
+                            var reportStatus = "";
+                            if (item.reportStatus == 0)
+                                reportStatus = "未處理";
+                            else
+                                reportStatus = "已處理";
+                            var Milliseconds = parseInt(item.createdTime.replace(/\D/igm, ""));
+                            var year = new Date(Milliseconds).getFullYear();
+                            var month = new Date(Milliseconds).getMonth() + 1;
+                            var date = new Date(Milliseconds).getDate();
+                            var hour = new Date(Milliseconds).getHours();
+                            var min = new Date(Milliseconds).getMinutes();
+                            var sec = new Date(Milliseconds).getSeconds();
 
-                        $("#showList").append(`
-                                                                <tr data-toggle='modal'  data-target='#report' onclick="getReportDetail(${item.ReportID})">
-                                                                    <td>${item.ReportID}</td>
-                                                                    <td>[${item.reportorID}]${item.reportorName}</td>
-                                                                    <td>[${item.repotedUserID}]${item.repotedUserName}</td>
-                                                                    <td>${year}-${month}-${date} ${hour}:${min}:${sec}</td>
-                                                                    <td><a  id="reportStauts${item.ReportID}">${reportStatus}</a></td>
-                                                                    <td>${item.ReportDetailTag}</td>
-                                                                </tr>`);
-                        $("a").each(function () {
-                            if ($(this).text() == "未處理") {
-                                $(this).attr("style", "color:red;");
-                            }
-                        })
+                            $("#showList").append(`
+                                                                    <tr data-toggle='modal'  data-target='#report' onclick="getReportDetail(${item.ReportID})">
+                                                                        <td>${item.ReportID}</td>
+                                                                        <td>[${item.reportorID}]${item.reportorName}</td>
+                                                                        <td>[${item.repotedUserID}]${item.repotedUserName}</td>
+                                                                        <td>${year}-${month}-${date} ${hour}:${min}:${sec}</td>
+                                                                        <td><a  id="reportStauts${item.ReportID}">${reportStatus}</a></td>
+                                                                        <td>${item.ReportDetailTag}</td>
+                                                                    </tr>`);
+                            $("a").each(function () {
+                                if ($(this).text() == "未處理") {
+                                    $(this).attr("style", "color:red;");
+                                }
+                            })
                     });
+                        }
+                    })
                 }
             })
-    }
+        }
+
+        function getReportList_P() {
+            var search = $("#search_generic").val();
+            $.ajax({
+                url: "@Url.Action("getReportList_P", "backstage")",
+                data: { search: search},
+                type: "GET",
+                success: function (report) {
+                    $("#show").html(`
+                                    <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="getReportList_P()">搜尋</button></div>
+                                        <table class='table table-hover'>
+                                            <thead class='table-dark'>
+                                                <tr id='showTh'>
+                                                    <th>檢舉單號</th>
+                                                    <th>檢舉人</th>
+                                                    <th>被檢舉人</th>
+                                                    <th>檢舉時間</th>
+                                                    <th>處理狀態</th>
+                                                    <th>檢舉類別</th>
+                                                </tr>
+                                            </thead>
+                                        <tbody id='showList'></tbody>
+                                    </table>`);
+                    $("#show").pagination({
+                        dataSource: report,
+                        pageSize: 8,
+                        callback: function (data) {
+                            $("#showList").html("");
+                            $(data).each(function (index, item) {
+                            var reportStatus = "";
+                            if (item.reportStatus == 0)
+                                reportStatus = "未處理";
+                            else
+                                reportStatus = "已處理";
+                            var Milliseconds = parseInt(item.createdTime.replace(/\D/igm, ""));
+                            var year = new Date(Milliseconds).getFullYear();
+                            var month = new Date(Milliseconds).getMonth() + 1;
+                            var date = new Date(Milliseconds).getDate();
+                            var hour = new Date(Milliseconds).getHours();
+                            var min = new Date(Milliseconds).getMinutes();
+                            var sec = new Date(Milliseconds).getSeconds();
+
+                            $("#showList").append(`
+                                                                    <tr data-toggle='modal'  data-target='#report' onclick="getReportDetail(${item.ReportID})">
+                                                                        <td>${item.ReportID}</td>
+                                                                        <td>[${item.reportorID}]${item.reportorName}</td>
+                                                                        <td>[${item.repotedUserID}]${item.repotedUserName}</td>
+                                                                        <td>${year}-${month}-${date} ${hour}:${min}:${sec}</td>
+                                                                        <td><a  id="reportStauts${item.ReportID}">${reportStatus}</a></td>
+                                                                        <td>${item.ReportDetailTag}</td>
+                                                                    </tr>`);
+                            $("a").each(function () {
+                                if ($(this).text() == "未處理") {
+                                    $(this).attr("style", "color:red;");
+                                }
+                            })
+                    });
+                        }
+                    })
+                }
+            })
+        }
 
     //檢舉modal
     function getReportDetail(ReportID) {
@@ -905,7 +1252,7 @@
                                                     <label>被檢舉人<input class='form-control' type='text' value="[${reportdetail.repotedUserID}]${reportdetail.repotedUserName}" readonly/>
                                                     <label>檢舉類別<input class='form-control' type='text' value="${reportdetail.ReportDetailTag}" readonly/>
                                                     <label>檢舉內容<input class='form-control' type='text' value="${reportdetail.reportDescription}" readonly/>
-                                                    <label>來源<input class='form-control' type='text' value="${source}" readonly/>
+                                                    <label>來源<input id="source" class='form-control' type='text' value="${source}" readonly/>
                                                     <label>來源編號<input class='form-control' type='text' value="${reportdetail.ProductOrRequireID}" readonly/>
                                                     <label>檢舉時間<input class='form-control' type='text' value="${year}-${month}-${date} ${hour}:${min}:${sec}" readonly/>
                                                     <label>處理狀態<input class='form-control reportStatus' type='text' value="${reportStatus}" readonly/>
@@ -917,8 +1264,15 @@
                         }
                         else {
                             $("#report-footer").html("");
+                            $("#reportToProductPost").html("");
                         }
                     })
+
+                    if (reportdetail.reportStatus == 0 && reportdetail.ProductOrRequire == 0) {    //商品貼文
+                        $("#reportToProductPost").html(`<button type="button" class="btn btncss_inside" data-toggle='modal'  data-target='#editProduct' data-dismiss="modal" onclick="getProductPostFromAll(${reportdetail.ProductOrRequireID})">查看貼文</button>`)
+                    } else if (reportdetail.reportStatus == 0 && reportdetail.ProductOrRequire == 1) {
+                        $("#reportToProductPost").html(`<button type="button" class="btn btncss_inside" data-toggle='modal'  data-target='#requirePost' data-dismiss="modal" onclick="getRequirePost(${reportdetail.ProductOrRequireID})">查看貼文</button>`)
+                    }
 
                 });
             }
@@ -953,6 +1307,235 @@
             }
             return "";
 
+        }
+
+    //徵求台上架列表
+        function RequirePost() {
+            $.ajax({
+                url: "@Url.Action("getRequirePostList_P", "backstage")",
+                type: "GET",
+                success: function (report) {
+                    $("#show").html(`
+                                    <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="search_productPost()">搜尋</button></div>
+                                        <table class='table table-hover'>
+                                            <thead class='table-dark'>
+                                                <tr id='showTh'>
+                                                    <th>徵求文編號</th>
+                                                    <th>徵求人</th>
+                                                    <th>標題</th>
+                                                    <th>類別</th>
+                                                    <th>預算</th>
+                                                </tr>
+                                            </thead>
+                                        <tbody id='showList'></tbody>
+                                    </table>`).pagination({
+                                        dataSource: report,
+                                        pageSize: 8,
+                                        callback: function (data) {
+                                            $("#showList").html("");
+                                            $(data).each(function (index, item) {
+                                                $("#showList").append(`
+                                                                <tr data-toggle='modal'  data-target='#requirePost' onclick="getRequirePost(${item.RequiredPostID})">
+                                                                    <td>${item.RequiredPostID}</td>
+                                                                    <td>[${item.UserID}]${item.UserName}</td>
+                                                                    <td>[${item.postName}]${item.postName}</td>
+                                                                    <td>${item.TagName}</td>
+                                                                    <td>${item.estimatePrice}</td>
+                                                                </tr>`);
+
+                                            });
+                                        }
+                                    });
+                }
+            })
+        }
+
+        function search_productPost() {
+            var search = $("#search_generic").val();
+            $.ajax({
+                url: "@Url.Action("getSearchRequirePostList_P", "backstage")",
+                data: { search: search},
+                type: "GET",
+                success: function (report) {
+                    $("#show").html(`
+                                    <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="search_productPost()">搜尋</button></div>
+                                        <table class='table table-hover'>
+                                            <thead class='table-dark'>
+                                                <tr id='showTh'>
+                                                    <th>徵求文編號</th>
+                                                    <th>徵求人</th>
+                                                    <th>標題</th>
+                                                    <th>類別</th>
+                                                    <th>預算</th>
+                                                </tr>
+                                            </thead>
+                                        <tbody id='showList'></tbody>
+                                    </table>`).pagination({
+                                        dataSource: report,
+                                        pageSize: 8,
+                                        callback: function (data) {
+                                            $("#showList").html("");
+                                            $(data).each(function (index, item) {
+                                                $("#showList").append(`
+                                                                <tr data-toggle='modal'  data-target='#requirePost' onclick="getRequirePost(${item.RequiredPostID})">
+                                                                    <td>${item.RequiredPostID}</td>
+                                                                    <td>[${item.UserID}]${item.UserName}</td>
+                                                                    <td>[${item.postName}]${item.postName}</td>
+                                                                    <td>${item.TagName}</td>
+                                                                    <td>${item.estimatePrice}</td>
+                                                                </tr>`);
+
+                                            });
+                                        }
+                                    });
+                }
+            })
+        }
+
+        //徵求台下架列表
+        function RequirePost_OffSale() {
+            $.ajax({
+                url: "@Url.Action("getOff_SaleRequirePostList_P", "backstage")",
+                type: "GET",
+                success: function (report) {
+                    $("#show").html(`
+                                    <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="getSearchOff_SaleRequirePostList_P()">搜尋</button></div>
+                                        <table class='table table-hover'>
+                                            <thead class='table-dark'>
+                                                <tr id='showTh'>
+                                                    <th>徵求文編號</th>
+                                                    <th>徵求人</th>
+                                                    <th>標題</th>
+                                                    <th>類別</th>
+                                                    <th>預算</th>
+                                                </tr>
+                                            </thead>
+                                        <tbody id='showList'></tbody>
+                                    </table>`).pagination({
+                                        dataSource: report,
+                                        pageSize: 8,
+                                        callback: function (data) {
+                                            $("#showList").html("");
+                                            $(data).each(function (index, item) {
+                                                $("#showList").append(`
+                                                                <tr data-toggle='modal'  data-target='#requirePost' onclick="getRequirePost(${item.RequiredPostID},1)">
+                                                                    <td>${item.RequiredPostID}</td>
+                                                                    <td>[${item.UserID}]${item.UserName}</td>
+                                                                    <td>[${item.postName}]${item.postName}</td>
+                                                                    <td>${item.TagName}</td>
+                                                                    <td>${item.estimatePrice}</td>
+                                                                </tr>`);
+                                            });
+                                        }
+                                    });
+                }
+            })
+        }
+
+        function getSearchOff_SaleRequirePostList_P() {
+            var search = $("#search_generic").val();
+            $.ajax({
+                url: "@Url.Action("getSearchOff_SaleRequirePostList_P", "backstage")",
+                data: { search: search},
+                type: "GET",
+                success: function (report) {
+                    $("#show").html(`
+                                    <div class='d-flex justify-content-center mb-3'><input placeholder="請輸入關鍵字" type='text'  id='search_generic'/><button class="btn search_generic" onclick="getSearchOff_SaleRequirePostList_P()">搜尋</button></div>
+                                        <table class='table table-hover'>
+                                            <thead class='table-dark'>
+                                                <tr id='showTh'>
+                                                    <th>徵求文編號</th>
+                                                    <th>徵求人</th>
+                                                    <th>標題</th>
+                                                    <th>類別</th>
+                                                    <th>預算</th>
+                                                </tr>
+                                            </thead>
+                                        <tbody id='showList'></tbody>
+                                    </table>`).pagination({
+                                        dataSource: report,
+                                        pageSize: 8,
+                                        callback: function (data) {
+                                            $("#showList").html("");
+                                            $(data).each(function (index, item) {
+                                                $("#showList").append(`
+                                                                <tr data-toggle='modal'  data-target='#requirePost' onclick="getRequirePost(${item.RequiredPostID})">
+                                                                    <td>${item.RequiredPostID}</td>
+                                                                    <td>[${item.UserID}]${item.UserName}</td>
+                                                                    <td>[${item.postName}]${item.postName}</td>
+                                                                    <td>${item.TagName}</td>
+                                                                    <td>${item.estimatePrice}</td>
+                                                                </tr>`);
+
+                                            });
+                                        }
+                                    });
+                }
+            })
+        }
+
+    //徵求台modal
+        function getRequirePost(RequiredPostID, check) {
+            $.ajax({
+                url: "@Url.Action("getRequirePost_P", "backstage")",
+                type: "GET",
+                data: { RequiredPostID: RequiredPostID},
+                success: function (product) {
+                    $("#requestPost-footer").html("");
+                    if (check != 1) {
+                        $("#requestPost-footer").html(`<button class='btn btn_del' data-dismiss="modal" onclick="delRequirePost(${RequiredPostID})">下架貼文</button>`);
+                    }
+                    $(product).each(function (index, product) {
+                        var Milliseconds = parseInt(product.postTime.replace(/\D/igm, ""));
+                        var year = new Date(Milliseconds).getFullYear();
+                        var month = new Date(Milliseconds).getMonth() + 1;
+                        var date = new Date(Milliseconds).getDate();
+                        var hour = new Date(Milliseconds).getHours();
+                        var min = new Date(Milliseconds).getMinutes();
+                        var sec = new Date(Milliseconds).getSeconds();
+                        $("#requirePostbody").html(`
+                                                <div class='d-flex justify-content-center'>
+                                                    <label>徵求商品照片
+                                                        <div style="width:200px; height:200px; background-image:url(../Content/ProductPostImg/${product.postImg}); background-size:cover"></div>
+                                                    </label>
+                                                </div>
+                                                <div class='d-flex justify-content-between mx-5'>
+                                                    <label>徵求文編號<input class='form-control' type='text' value="${product.RequiredPostID}" readonly /></label>
+                                                    <label>徵求標題<input class='form-control' type='text' value="${product.postName}" readonly/></label>
+                                                    <label>描述<input class='form-control' type='text' value="${product.postDescription}" readonly/></label>
+                                                </div>
+                                                <div class='d-flex justify-content-between mx-5'>
+                                                    <label>徵求人<input class='form-control' type='text' value="${product.UserName}" readonly/></label>
+                                                    <label>數量<input class='form-control' type='text' value="${product.requiredQTY}" readonly/></label>
+                                                    <label>預算<input class='form-control' type='text' value="${product.estimatePrice}" readonly/></label>
+                                                </div>
+                                                <div class='d-flex justify-content-between mx-5'>
+                                                    <label>縣市<input class='form-control' type='text' value="${product.county}" readonly/></label>
+                                                    <label>區域<input class='form-control' type='text' value="${product.district}" readonly/></label>
+                                                    <label>地址<input class='form-control' type='text' value="${product.address}" readonly/></label>
+                                                </div>
+                                                <div class='d-flex justify-content-between mx-5'>
+                                                    <label>類別<input class='form-control' type='text' value="${product.TagName}" readonly/></label>
+                                                    <label>建立時間<input class='form-control' type='text' value="${year}-${month}-${date} ${hour}:${min}:${sec}" readonly/></div></label>
+                                                </div>
+                                                            `)
+                    })
+                    }
+            })
+        }
+
+        //下架徵求文
+        function delRequirePost(RequiredPostID) {
+            console.log(RequiredPostID);
+            $.ajax({
+                url: "@Url.Action("delRequirePost", "backstage")",
+                type: "GET",
+                data: { RequiredPostID: RequiredPostID },
+                success: function (product) {
+                    swal("已下架", "", "success");
+                    RequirePost();
+                }
+            })
         }
 
     </script>

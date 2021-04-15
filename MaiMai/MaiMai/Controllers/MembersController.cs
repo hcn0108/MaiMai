@@ -117,7 +117,7 @@ namespace MaiMai.Controllers
 
 
 
-            SqlConnection conn = new SqlConnection("data source=maimai.database.windows.net;initial catalog=maimai2;persist security info=True;user id=team4;password=MaiMai123;");
+            SqlConnection conn = new SqlConnection("data source=maimai2.database.windows.net;initial catalog=maimai;persist security info=True;user id=team4;password=MaiMai123;");
             conn.Open();
 
             SqlCommand bb = new SqlCommand("Select * From Member Where userAccount='" + account + "'", conn);
@@ -140,6 +140,7 @@ namespace MaiMai.Controllers
         }
 
         [HttpPost]
+
         public String LoginMethod(LoginViewModel login)
         {
             //if (ModelState.IsValid)
@@ -187,19 +188,44 @@ namespace MaiMai.Controllers
             return RedirectToAction("MaimaiIndexNew", "NewMaimaiIndex");
         }
 
-        //public string uploadPhoto(upLoadPhotoViewModel data)
-        //{
-        //    if (data.upphoto == null)
-        //    {
-        //        return "../Content/resource_nico/images/無圖示.jpg";
-        //    }
-        //    //HttpPostedFileBase photo = new HttpPostedFileBase(upphoto);
-        //    string filename = data.upphoto.FileName;
-        //    data.upphoto.SaveAs(Server.MapPath("../Content/MemberImg/") + filename);
-        //    string filePath = $"../Content/MemberImg/{filename}";
+        public String LoginMethodfb(LoginViewModel login)
+        {
+            //if (ModelState.IsValid)
+            //{
+            //    return View();
+            //}
 
-        //    return filePath;
-        //}
+            Member mb = db.Member.FirstOrDefault(m => m.userAccount == login.userAccount);
+
+            if (mb == null)
+            {
+
+
+                return "帳號不存在或密碼錯誤!";
+            }
+
+            Response.Cookies["LoginAccount"].Value = mb.UserID.ToString();
+            Response.Cookies["LoginName"].Value = mb.userAccount.ToString();
+            Response.Cookies["LoginID"].Value = mb.UserID.ToString();
+            Response.Cookies["MemberLevel"].Value = mb.userLevel.ToString();
+
+
+            if (login.RememberMe == "on")
+            {
+                Response.Cookies["MemberLevel"].Expires = DateTime.Now.AddDays(7);
+                Response.Cookies["LoginAccount"].Expires = DateTime.Now.AddDays(7);
+                Response.Cookies["LoginName"].Expires = DateTime.Now.AddDays(7);
+                Response.Cookies["LoginID"].Value = mb.UserID.ToString();
+            }
+
+
+
+            //return RedirectToAction("Homepage", "HomePage_C");
+            //return RedirectToAction("index", "Home");
+            return "登入成功";
+
+        }
+
 
     }
 }

@@ -13,50 +13,166 @@
             height: 750px;
             border: 1px solid gray;
         }
-        img {
-            
+        mapPostimg {
+            width:300px;
+            height:300px;
         }
     </style>
 </head>
 <body>
     <div class="container" style="padding-top:100px">
         <h2>顯示附近的訂單</h2>
-        <div id="map" class="map"></div>
+        <div class="w-100 d-flex">
+            <div id="map" class="map"></div>
+            <div style="        width: 400px;
+        height: 750px;
+        border: 1px solid gray;
+        padding: 10px;" id="postbox">
+                
+            </div>
+        </div>
+        
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script>
         var CurrentPos;
+        var geocoder;
         $(function () {
-
-            //function initMap() {
-            var latlng = { lat: 25.046891, lng: 121.516602 }; // 給一個初始位置
+            initMap();             
+            //var latlng = { lat: 25.046891, lng: 121.516602 }; // 給一個初始位置
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 14, //放大的倍率
-                center: latlng, //初始化的地圖中心位置
-                mapTypeControl: false,
-                scaleControl: false,
-                streetViewControl: false,
-                rotateControl: false,
-                fullscreenControl: false,
-                styles: [{
-                    visibility: 'off',
-                }],
+                //center: latlng, //初始化的地圖中心位置
+                mapTypeControl: false, //預設功能關閉 ex.放大、切換衛星地圖...等
+                scaleControl: false, /*比例尺*/
+                streetViewControl: false, /*地圖與街景切換*/
+                rotateControl: false, /*旋轉 45 度地圖*/
+                fullscreenControl: false, /*全螢幕地圖*/
+                styles: /*陣列形式，表示這個地圖顯示出來的樣式。*/ [{
+                    "featureType": "administrative",
+                    "elementType": "geometry",
+                    "stylers": [
+                        {
+                            "visibility": "off"
+                        }
+                    ]
+                },
+                    {
+                        "featureType": "poi",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "road",
+                        "elementType": "labels.icon",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    },
+                    {
+                        "featureType": "transit",
+                        "stylers": [
+                            {
+                                "visibility": "off"
+                            }
+                        ]
+                    }],
             });
-            var marker = new google.maps.Marker({
-                position: latlng,
-                map: map
-            });
+            //var marker = new google.maps.Marker({
+            //    //position: latlng,
+            //    //map: map
+            //});
+            //定位地點start
+            function initMap() {
+                geocoder = new google.maps.Geocoder();
+                //map = new google.maps.Map(document.getElementById('map'), {
+                //    zoom: 10
+                //});
+                var address;
+                //生成address位置start
+                $.ajax({
+                    url: "/googleMap/getmarket",
+                    type: "GET",
+                    success: function (MapList) {
+                        $(MapList).each(function (i, item) {
+                            //重後台抓位置start
+                            address = (`${item.county}${item.district}${item.address}`).toString()
+                            geocoder.geocode({ 'address': address }, function (results, status) {
+                                if (status == 'OK') {
+                                    map.setCenter(results[0].geometry.location);
+                                    const contentString = `<h5>${item.requiredPostName}</h5>
+                                            <img style="border-radius:50%; width:50px;height:50px" src="../Content/ProductPostImg/member/${item.userAvrta}" />
+                                             <span class="font-weight-bolder"> ${item.posterName}</span>
+                                        <button class-"btn" id="btn${item.requiredPostID}" name="${item.requiredPostID}" onclick="formRequiredSingalPage(${item.requiredPostID})" > 查看貼文</button>`;
+                                    const infowindow = new google.maps.InfoWindow({
+                                        content: contentString,
+                                    });
+                                    var marker = new google.maps.Marker({
+                                        map: map,
+                                        label: 'MaiMai',
+
+                                        position: results[0].geometry.location,
+                                        //icon: {
+                                        //    url: '/Content/resource_nico/logoTOPwithoutBG.png',
+                                        //    scaledSize: new google.maps.Size(10, 10)
+                                        //},
+                                    });
+                                    marker.addListener("mouseover", () => {
+                                        infowindow.open(map, marker);
+
+                                    });
+                                    //var btn = document.getElementsByTagName('button');
+                                    //btn.addEventListener('click', () => {
+                                    //    console.log(event.target);
+                                    //    var id = $(event.taget).attr(name);
+                                    //    console.log(id);
+                                    //    formRequiredSingalPage(id);
+
+                                    //});
 
 
+                                } else {
+                                    console.log(status);
+                                }
+                            });
+                            //重後台抓位置end
+                        })
+                    }
+                })
+                //生成address位置end
+            }
+        //定位地點End
+            //var marker = new google.maps.Marker({
+            //    position: {
+            //        lat: 25.046891,
+            //        lng: 121.516602
+            //    },
+            //    map: map
+            //});
+            //var infowindow = new google.maps.InfoWindow({
+            //    content: '<h1>大家好</h1>'
+            //});
+            //marker.addListener('click', function () {
+            //    a = a * -1;
+            //    if (a > 0) {
+            //        infowindow.open(map, marker);
+            //    } else {
+            //        infowindow.close();
+            //    }
+            //});
+             
             if (navigator.geolocation) {
-
                 navigator.geolocation.getCurrentPosition(function (position) {
                     CurrentPos = {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude
                     };
-
-
+                    console.log(CurrentPos)
                     var marker = new google.maps.Marker({
                         title: "現在位置",
                         icon: {
@@ -64,19 +180,11 @@
                                  scaledSize: new google.maps.Size(100, 100)
                         },
                         draggable: true,
-                        stylers: [{
-                            visibility: 'off'
-                        }],
                         position: CurrentPos,
                         map: map
                     });
-
-
-
                     map.setZoom(17);
                     map.setCenter(CurrentPos);
-
-
                     let cityCircle = new google.maps.Circle({
                         strokeColor: '#f1c40f', // 線條顏色
                         strokeOpacity: 1, // 線條透明度
@@ -87,8 +195,12 @@
                         // 中心點
                         center: CurrentPos,
                         // 半徑
-                        radius: 2000
+                        radius: 500
                     });
+                    //=============================================================
+
+
+
 
                 });
             }
@@ -97,16 +209,51 @@
                         // Browser doesn't support Geolocation
                         alert("未允許或遭遇錯誤！");
              }
+        })
+        //end of document ready
+ 
 
-      
+    
+        function formRequiredSingalPage(index) {
+            var text = "";
+            $.ajax({
+                type: "POST",
+                url: "/RequiredPost/getsingalPost",
+                data: {
+                    requiredPostID: index
+                },
+                success: function (data) {
+                    var Milliseconds = parseInt(data.postTime.replace(/\D/igm, ""));
+                    var year = new Date(Milliseconds).getFullYear();
+                    var month = new Date(Milliseconds).getMonth() + 1;
+                    var date = new Date(Milliseconds).getDate();
+                    text += `
+                            <div class="mapPostimg" >
+                            <img class="w-100" src="../Content/resource_nico/images/徵求台POST/${data.postImg}">
+                            </div>
+                            <a onclick="toRequiredPostSingal(${data.RequiredPostID})" href="#"><h6 class="my-5">貼文名稱 : <span class="font-weight-bolder">${data.postName}</span></h6></a>
+                               <div class="d-flex">
+                             <img style="border-radius:50%; width:50px;height:50px" src="../Content/ProductPostImg/member/${data.userAvrta}"/>
 
-
-
-
-
-        })//end of document ready
-
-
+                            <a onclick="window.open('../../PersonalMarket/Personal_Index_WithoutLogin?UserID=${data.UserID}','${data.userAccount}的賣場')" href="#"><h6 class="my-3 mx-3"> 買家 :  <span class="font-weight-bolder">${data.userAccount}</span></h6><a>
+                            </div>
+                            <h6 class="my-3">貼文描述 :  <span class="font-weight-bolder">${data.postDescription}</span></h6>
+                            <h6 class="my-3"> 大概徵求價位：<span class="font-weight-bolder">${data.estimatePrice}</span>  元</h6>
+                             <div class="my-5">
+                            <span>${data.county}</span><span>${data.district}</span>
+                            </div>
+                            <span>建立時間 : ${year} - ${month} - ${date}</span>
+                            `
+                    $("#postbox").html(text);
+                },
+                error: function (data) {
+                    Swal.fire("失敗", data, 'error');
+                }
+            });
+        }
+        function toRequiredPostSingal(id) {
+                window.open(`../../RequiredPost/requiredSingalPage?rqID=${id}`, '徵求台');
+            }
     </script>
 
 </body>

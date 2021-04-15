@@ -31,14 +31,14 @@ width:  100%;
   
 }
 
-.btn-post:hover {
+/*.btn-post:hover {
 
     background-color:#FFB4A2;
-}
-.btn-comment:hover {
+}*/
+/*.btn-comment:hover {
     background-color: #B5838D;
 }
-
+*/
 
 @media (max-width: 575.98px) {
     .photo {
@@ -91,6 +91,7 @@ img {
 .post-button{
     display: flex;
     justify-content: space-between;
+    flex-grow:inherit;
 
 }
 .post-text{
@@ -100,9 +101,14 @@ img {
     display: block;
     
 }
-.comment {
-    background-color: #EFD3D7;
+.butt:hover {
+    cursor: pointer;
 }
-#start:hover {
-    background-color: #EFD3D7;
+.nico_but {
+    font-weight:bolder;
+    color:#B5838D;
 }
+.rpHover:hover {
+    background-color:#EFD7dE
+}
+/*F7E7DE*/

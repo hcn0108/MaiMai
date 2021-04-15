@@ -45,7 +45,7 @@ namespace MaiMai.Controllers
         {
 
              
-            var table = db.ProductPost.Where(m => m.UserID == UserID&&m.status==1).Select(m => new ProductCommentListViewModel()
+            var table = db.ProductPost.Where(m => m.UserID == UserID&&m.status==1&&m.inStoreQTY>0).Select(m => new ProductCommentListViewModel()
             {
                 ProductPostID = m.ProductPostID,
                 productName = m.productName,
@@ -84,5 +84,53 @@ namespace MaiMai.Controllers
         {
             return View();
         }
+        maimaiRepository<ProductPost> productPostRepository = new maimaiRepository<ProductPost>();
+        public string commemtProductPost(ProductCommentListViewModel ps)
+        {
+            try
+            {
+                ProductPost product = new ProductPost()
+                {
+                    //ProductPostID = ps.ProductPostID,
+                    productName = ps.productName,
+                    productDescription = ps.productDescription,
+                     status= 1,
+                    inStoreQTY = ps.inStoreQTY,
+                    price = ps.price,
+                    TagID = ps.TagID,
+                    RequiredPostID = ps.RequiredPostID,
+
+                    createdTime = DateTime.Now,
+                    county = ps.county,
+                    district = ps.district,
+                    UserID = Convert.ToInt32(Request.Cookies["LoginAccount"].Value)
+
+                };
+                if (ps.upphoto == null)
+                {
+                    product.productImg = "無圖示.jpg";
+                }
+                else
+                {
+                    
+
+                    product.productImg = ps.upphoto.FileName;
+                    string filename = ps.upphoto.FileName;
+                    ps.upphoto.SaveAs(Server.MapPath("../Content/ProductPostImg/") + filename);
+                    string filePath = $"../Content/ProductPostImg/{filename}";
+
+                }
+                //HttpPostedFileBase photo = new HttpPostedFileBase(upphoto);
+
+                productPostRepository.Create(product);
+
+                return "留言成功";
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
+
     }
-    }
+}

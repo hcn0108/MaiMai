@@ -22,7 +22,7 @@ namespace MaiMai.Models.ViewModel
         public string district { get; set; }
         public HttpPostedFileBase upphoto { get; set; }
         public string userAccount { get; set; }
-
+        public string address { get; set; }
         public string userAvrta { get; set; }
 
     }

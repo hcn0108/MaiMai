@@ -162,39 +162,48 @@ namespace MaiMai.Controllers
         maimaiRepository<ProductPost> productPostRepository = new maimaiRepository<ProductPost>();
         public string commemtProductPost(ProductCommentListViewModel ps)
         {
-            ProductPost product = new ProductPost()
+            try
             {
-                ProductPostID = ps.ProductPostID,
-                productName = ps.productName,
-                productDescription = ps.productDescription,
-                status=ps.status,
-                inStoreQTY = ps.inStoreQTY,
-                price = ps.price,
-                TagID = ps.TagID,
-                RequiredPostID = ps.RequiredPostID,
-                productImg = ps.upphoto.FileName,
-                createdTime = DateTime.Now,
-                UserID = Convert.ToInt32(Request.Cookies["LoginAccount"].Value)
+                ProductPost product = new ProductPost()
+                {
+                    //ProductPostID = ps.ProductPostID,
+                    productName = ps.productName,
+                    productDescription = ps.productDescription,
+                    status = ps.status==null?1:ps.status,
+                    inStoreQTY = ps.inStoreQTY,
+                    price = ps.price,
+                    TagID = ps.TagID,
+                    RequiredPostID = ps.RequiredPostID,
+                   
+                    createdTime = DateTime.Now,
+                    county = ps.county,
+                    district = ps.district,
+                    UserID = Convert.ToInt32(Request.Cookies["LoginAccount"].Value)
 
-            };
-            if (ps.upphoto == null)
-            {
-                product.productImg = "無圖示.jpg";
+                };
+                if (ps.upphoto == null)
+                {
+                    product.productImg = "無圖示.jpg";
+                }
+                else
+                {
+                   
+
+                    product.productImg = ps.upphoto.FileName;
+                    string filename = ps.upphoto.FileName;
+                    ps.upphoto.SaveAs(Server.MapPath("../Content/ProductPostImg/") + filename);
+                    string filePath = $"../Content/ProductPostImg/{filename}";
+
+                }
+                //HttpPostedFileBase photo = new HttpPostedFileBase(upphoto);
+
+                productPostRepository.Create(product);
+
+                return "留言成功";
             }
-            else {
-                product.status = 1;
-            
-            product.productImg = ps.upphoto.FileName;
-            string filename = ps.upphoto.FileName;
-            ps.upphoto.SaveAs(Server.MapPath("../Content/ProductPostImg/") + filename);
-            string filePath = $"../Content/ProductPostImg/{filename}";
-
+            catch (Exception e) {
+                return e.Message;
             }
-            //HttpPostedFileBase photo = new HttpPostedFileBase(upphoto);
-
-            productPostRepository.Create(product);
-
-            return "留言成功";
         }
 
         public ActionResult checkAllComment(string data)
@@ -231,13 +240,14 @@ namespace MaiMai.Controllers
 
                 postDescription = rp.postDescription,
                 postName = rp.postName,
-                postImg = rp.upphoto.FileName,
+                postImg = rp.upphoto.FileName, 
                 requiredQTY = rp.requiredQTY,
                 TagID = rp.TagID,
                 estimatePrice = rp.estimatePrice,
                 OrderID = rp.OrderID,
                 county = rp.county,
                 district = rp.district,
+                address=rp.address,
                 isPast = false
 
             };
@@ -311,6 +321,7 @@ namespace MaiMai.Controllers
                     post.OrderID = rp.OrderID;
                     post.county = rp.county;
                     post.district = rp.district;
+                    post.address = rp.address;
                     post.isPast = false;
                    
 
@@ -353,6 +364,37 @@ namespace MaiMai.Controllers
             }
         
         }
+
+        //tag page
+
+        public ActionResult allrequiredwithTag(string tag) {
+
+            var id = Convert.ToInt32(tag);
+
+            var table = db.RequiredPost.Where(m => m.isPast == false &&  m.TagID==id).OrderByDescending(e => e.postTime).Select(m => new RequiredPostViewModel_C()
+            {
+                RequiredPostID = m.RequiredPostID,
+                postTime = m.postTime,
+                postDescription = m.postDescription,
+                postName = m.postName,
+                postImg = m.postImg,
+                UserID = m.UserID,
+                requiredQTY = m.requiredQTY,
+                estimatePrice = m.estimatePrice,
+                TagID = m.TagID,
+                OrderID = m.OrderID,
+                userAccount = m.Member.userAccount,
+                county = m.county,
+                district = m.district
+            }).ToList();
+
+
+            return Json(table, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+
 
         // required singal page
 

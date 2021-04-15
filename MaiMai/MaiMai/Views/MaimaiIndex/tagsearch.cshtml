@@ -2,7 +2,30 @@
 @{
     ViewBag.Title = "tagsearch";
 }
+<style>
+    .exImg2 {
+        width: 257px;
+        height: 233px;
+        background: #f4f4f4;
+        object-fit: cover;
+    }
 
+    .hidetext {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 240px;
+        font-weight: 600;
+    }
+
+    .price {
+        font-weight: bolder;
+        color: crimson;
+        font-size: large;
+    }
+
+   
+</style>
 <div style="height:100px"></div>
 
 @*<div>
@@ -11,7 +34,7 @@
     <div><p></p></div>
 </div>*@
 
-<div   style="height:100%;">
+<div   style="height:100%;padding-top: 34px;">
     <div class="container">
         <div class="row" id="tag-search">
         </div>
@@ -34,15 +57,16 @@
         success: function (tagsearch) {
             $(tagsearch).each(function (i, item) {
                 $("#tag-search").append(`
+
                 <div class="col-3 TagSearchStyle" onclick="CarouselClick(${item.PostID})"  >
                      <div class="TagSearchImgStyle">
                     <a style="width:100%;height:100%">
-                    <img style="width:220px;height:220px;border-radius:15px;"
+                    <img class="exImg2"style="border-radius:15px;"
                             src="../Content/ProductPostImg/${item.img}"/>
                     </a>
                     </div>
-                    <div><h4>名稱:${item.name}</h4></div>
-                     <div><p>金額:${item.price}</p></div>
+                    <div><h4 class="hidetext">名稱:${item.name}</h4></div>
+                     <div><p class="price">金額:$${item.price}</p></div>
                 </div>
                 `)
             })

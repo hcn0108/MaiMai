@@ -1,4 +1,4 @@
-﻿
+
 @{
     ViewBag.Title = "OrderIndex";
 }
@@ -64,13 +64,13 @@
 
                 <thead>
                     <tr>
-                        <th scope="col">訂單編號</th>
-                        <th scope="col">建立時間</th>
-                        <th scope="col">商品細項</th>
+                        <th scope="col" width="100px">訂單編號</th>
+                        <th scope="col" width="150px">建立時間</th>
+                        <th scope="col" style="text-align:center">商品細項</th>
                         <th scope="col"></th>
                         <th scope="col">賣家商城</th>
-                        <th scope="col">訂單狀態</th>
-                        <th scope="col"></th>
+                        <th scope="col"  width="100px">訂單狀態</th>
+                        <th scope="col"  width="100px"></th>
 
                     </tr>
                 </thead>
@@ -232,8 +232,8 @@
     } // end of getCookie
 
     var test = getCookie('LoginID');
-
-        var starRate;
+    var starRate;
+     
     $(function () {
 
 
@@ -267,7 +267,6 @@
 
                 })
                 $('#tbody').html(text)
-
             }
         })
 
@@ -284,12 +283,24 @@
                     var year = new Date(Milliseconds).getFullYear();
                     var month = new Date(Milliseconds).getMonth() + 1;
                     var date = new Date(Milliseconds).getDate();
-
-
                     var sellerStatus = item.sellerStatus;
                     var buyerStatus = item.buyerStatus;
+                    if (buyerStatus == 3) {
 
-                    if (buyerStatus == 2) {
+                        text += `
+                        <tr >
+                        <td id="oderdeail" name="${item.oderdeail}"> ${item.OrderId}</td>
+                        <td>${year} - ${month} - ${date}</td>
+                        <td><div class="photo"><img   src="../Content/ProductPostImg/${item.productImg}"><div></td>
+                        <td> <a class="btn" role="button" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}">   <h3 id="postName${i}">${item.ProductPostName}</h3></a></td>
+                        <td>${item.buyerName}</td>
+                        <td> 已到貨</td>
+                        <td> 已評論</td>
+                        </tr>`
+
+
+                    }
+                    else if (buyerStatus == 2) {
 
                         text += `
                         <tr >
@@ -301,9 +312,6 @@
                         <td> 已到貨</td>
                         <td><a class= "btn btn-outline-dark" data-toggle="modal" onclick="getComment(${item.oderdeail})" data-target="#exampleModalCenter"> 評論</td>
                         </tr>`
-
-
-
                     }
                     else if (buyerStatus == 1 && sellerStatus == 0) {
 
@@ -320,7 +328,6 @@
                         < td > <a class="btn btn-secondary" onclick="endOrder(${item.oderdeail})" > 結單</td>`
                     }
                     else if (buyerStatus == 1 && sellerStatus == 1) {
-
                         text += `
                         <tr >
                         <td> ${item.OrderId}</td>
@@ -347,11 +354,8 @@
                         <td><a class= "btn btn-outline-dark" onclick="endOrder(${item.oderdeail})"> 結單</td>
                         </tr>`
 
-                    }// 這邊要秀prodcut detail
-
-
+                    }// 這邊要秀prodcut detai
                     $('#tProcessbody').html(text)
-
                 })
             }
         })
@@ -382,7 +386,7 @@
                 $('#tPastbody').html(text)
             }
         })
-
+      
         // comment
         // 星星評等
 
@@ -470,24 +474,24 @@
 
     function checkout() {
 
-        //let id = $('#showOrderTitle').attr("name");
+        let id = $('#showOrderTitle').attr("name");
 
-        //$.ajax({
-        //    url: "/OrderManager/checkout",
-        //    type: "GET",
-        //    data: { 'orderid': id },
-        //    success: function (response) {
-        //        swal('成功', response, 'success');
+        $.ajax({
+            url: "/OrderManager/checkout",
+            type: "GET",
+            data: { 'orderid': id },
+            success: function (response) {
+                swal('成功', response, 'success');
 
-        //        window.location.reload("/OrderManager/OrderIndex");
+                window.location.reload("/OrderManager/OrderIndex");
 
-        //    },
-        //    error: function (response) {
+            },
+            error: function (response) {
 
-        //        window.alert(response);
-        //        window.location.reload("/OrderManager/OrderIndex");
-        //    }
-        //});
+                window.alert(response);
+                window.location.reload("/OrderManager/OrderIndex");
+            }
+        });
 
     };
 
@@ -514,6 +518,7 @@
 
     }
     //comment
+
      //OrderID:3 獲得目前評價s
     function getComment(oderdeail) {
         console.log(oderdeail);
@@ -557,6 +562,7 @@
             success: function (result) {
             swal('成功', '感謝您寶貴的意見', 'success');
                 setTimeout(function () { $(".close").click() }, 700);
+                window.location.reload();
             },
             error: function(){
             swal("失敗","星星滿意度為必要勾選!!",'error');

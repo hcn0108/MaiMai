@@ -63,6 +63,12 @@ namespace MaiMai.Controllers
             {
                 return Content("false");
             }
+            var delQTY = db.Cart.Find(productID).QTY;
+            var delProductPostId = db.Cart.Find(productID).ProductPostID;
+
+            db.ProductPost.Find(delProductPostId).inStoreQTY = db.ProductPost.Find(delProductPostId).inStoreQTY + delQTY;
+            db.SaveChanges();
+
             dbCart.Delete((int)productID);
 
             return Content("true");

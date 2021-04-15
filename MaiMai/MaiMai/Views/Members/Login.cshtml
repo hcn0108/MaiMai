@@ -42,13 +42,13 @@
 
                     <img src="~/Maimai/images/svg/maimaiTOPLOGO.svg" style="left:50px" />
                 </h1>
-                <h2 class="mv0 f5 dib">一起幫助需要幫助的人</h2>
+                <h2 class="mv0 f5 dib">跟我們一起，快樂購買</h2>
             </a>
         </div>
         <div class="w-50-l ph5-ns ph4 pv6-l pt3-ns pv4 bg-white-l" style="border-radius: 50px;">
             <div class="nt3 mt0-ns mb4"></div>
 
-            <a class="button b bg-fb white db pa3 ba b--blue mb3" href="/users/auth/facebook">Facebook 登入或註冊</a>
+            <div class="fb-login-button" data-max-rows="1" data-size="medium" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="true" data-use-continue-as="false" data-scope="public_profile,email" data-onlogin="checkLoginState();"></div>
             <div class="js-details reset-details mb3 f6 ba br2 b--light-gray">
                 <button class="pa3 tl js-summary button-text b black w-100 abb2 " type="button">
                     會員登入
@@ -56,7 +56,7 @@
                 </button>
                 <div class="mt3 ph3 pb3">
                     @*<form class="new_user" id="new_user" action="/users/sign_in" accept-charset="UTF-8" method="post">
-                        <input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="GquSTKxkkjl0S8dq2Pi+DNzYFEfVurvXYRew4reJSp+yFzr+TC7ns1AzQ1h3V66Y27LnVpFixs9LfVVRs2xoGQ==">*@
+                <input name="utf8" type="hidden" value="✓"><input type="hidden" name="authenticity_token" value="GquSTKxkkjl0S8dq2Pi+DNzYFEfVurvXYRew4reJSp+yFzr+TC7ns1AzQ1h3V66Y27LnVpFixs9LfVVRs2xoGQ==">*@
                     <div class="mt3">
                         <form>
                             <div>
@@ -71,25 +71,29 @@
 
 
                         @*<div>
-                                @Html.LabelFor(m => m.email, "E-mail", new { @class = "b" })
-                                @Html.TextBoxFor(m => m.email, new { @class = "w-100" })
-                            </div>
-                            <div>
-                                @Html.LabelFor(m => m.userPassWord, "密碼", new { @class = "b" })
-                                @Html.PasswordFor(m => m.userPassWord, new { @class = "w-100" })
-                            </div>*@
+            @Html.LabelFor(m => m.email, "E-mail", new { @class = "b" })
+            @Html.TextBoxFor(m => m.email, new { @class = "w-100" })
+        </div>
+        <div>
+            @Html.LabelFor(m => m.userPassWord, "密碼", new { @class = "b" })
+            @Html.PasswordFor(m => m.userPassWord, new { @class = "w-100" })
+        </div>*@
                         <div>
                             <label><input type="checkbox" name="RememberMe" />保持登入 </label>
                         </div>
+
                         <input type="submit" value="登入" class="button b green mr3" onclick="myFunction()" />
+                        <input type="button" value="翔耀" class="button  " onclick="demo1()" />
+                        <input type="button" value="家雯" class="button  " onclick="demo2()" />
+
 
 
 
                         @*<label class="b" for="user_email">電子信箱</label>
-                            <input class="w-100" required="required" autofocus="autofocus" type="email" name="user[email]" id="user_email">
-                            <label class="b" for="user_password">密碼</label>
-                            <input class="w-100" required="required" type="password" name="user[password]" id="user_password">
-                            <input checked="checked" type="hidden" name="user[remember_me]" id="user_remember_me">*@
+        <input class="w-100" required="required" autofocus="autofocus" type="email" name="user[email]" id="user_email">
+        <label class="b" for="user_password">密碼</label>
+        <input class="w-100" required="required" type="password" name="user[password]" id="user_password">
+        <input checked="checked" type="hidden" name="user[remember_me]" id="user_remember_me">*@
                         <div class="mt3">
                             @*<input type="submit" name="commit" value="登入" class="button b green mr3">*@
                             <span class="f7 gray">繼續進行代表你同意<a href="/docs/terms_of_service">服務條款</a>。</span>
@@ -104,7 +108,7 @@
 
             <a class="b f6 hover-blue black mr3" style="text-decoration: none" href="SignUp">註冊</a>
 
-            <a class="link b f6 hover-blue black mr3"  style="text-decoration: none"href="/users/password/new">忘記密碼或重設密碼</a>
+            <a class="link b f6 hover-blue black mr3" style="text-decoration: none" href="/users/password/new">忘記密碼或重設密碼</a>
 
 
         </div>
@@ -118,9 +122,19 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+ @*fbcdn*@
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v10.0&appId=760951437892454&autoLogAppEvents=1" nonce="uw6hH87Q"></script>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
     <script>
-
-
+        function demo1() {
+            $("#userAccount").val("MichaelXiao");
+            $("#userPassWord").val("aa123123");
+        }
+        function demo2() {
+            $("#userAccount").val("winny5028");
+            $("#userPassWord").val("abc49949");
+        }
         function myFunction() {
 
             var userAccount2 = $("#userAccount").val();
@@ -148,7 +162,7 @@
                         //alert(data);
                         alertTest1()
                         //window.location.href = "/NewMaimaiIndex/MaimaiIndexNew";
-                        setTimeout("home()", 2000)
+                        setTimeout("home()", 1000)
                     }
                     else {
                         alertTest()
@@ -188,13 +202,138 @@
         function alertTest1() {
             Swal.fire(
                 "登入成功", //標題
-                " 歡迎光臨MaiMai</br>2秒後自動跳轉回首頁...", //訊息內容(可省略)
+                " 歡迎光臨MaiMai</br>1秒後自動跳轉回首頁...", //訊息內容(可省略)
                 "success" //圖示(可省略) success/info/warning/error/question
 
             );
         }
         function home() {
             window.location.href = "/NewMaimaiIndex/MaimaiIndexNew";
+        }
+
+        window.fbAsyncInit = function () {
+            window.FB.init({
+                appId: '760951437892454',
+                cookie: true,
+                xfbml: true,
+                version: ' v10.0'
+            });
+
+            window.FB.AppEvents.logPageView();
+
+        };
+        //FB登入
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        //$(function () {
+        //    FB.getLoginStatus(function (response) {
+        //        statusChangeCallback(response);
+        //    });
+
+            function statusChangeCallback(response) {
+                console.log(response);
+                
+
+                // 登入 FB 且已加入會員
+                if (response.status === 'connected') {
+ 
+                    window.FB.api('/me?fields=id,name,email', function (response) {
+                        console.log(response);
+                      
+
+                        $("#userAccount").val(response.email)
+                        $("#userPassWord").val("fbuser123*")
+
+                        myFunctionfb()
+
+
+                    });
+                }
+
+                // 登入 FB, 未偵測到加入會員
+                else if (response.status === "not_authorized") {
+                    target.innerHTML = "已登入 FB，但未加入MaiMai  ";
+                }
+
+                // 未登入 FB
+                else {
+                    target.innerHTML = "未登入 FB";
+                }
+            }
+
+        //});
+        
+        //$(function () {
+        //    checkLoginState()
+        //});
+
+
+        function checkLoginState() {
+            FB.getLoginStatus(function (response) {
+                statusChangeCallback(response);
+            });
+        }
+
+
+        function myFunctionfb() {
+
+            var userAccount2 = $("#userAccount").val();
+
+            var userPassWord2 = $("#userPassWord").val();
+
+
+            $.ajax({
+
+                type: "POST",
+                url: " /Members/LoginMethodfb",
+                data: {
+
+
+                    userAccount: userAccount2,
+
+                    userPassWord: userPassWord2
+
+                },
+
+                success: function (data) {
+
+                    var byebye = data.indexOf("密碼錯誤")
+                    if (byebye < 0) {
+                        //alert(data);
+                        alertTest1()
+                        //window.location.href = "/NewMaimaiIndex/MaimaiIndexNew";
+                        setTimeout("home()", 1000)
+                    }
+                    else {
+                        alertTest()
+                    }
+
+
+                }
+
+            });
+
+            var test = getCookie('LoginAccount');
+
+            function getCookie(cookieName) {
+                var name = cookieName + "=";
+                var ca = document.cookie.split(';');
+                for (var i = 0; i < ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') c = c.substring(1);
+                    if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+                }
+                return "";
+            }
+            console.log(test);
+
+
         }
 
 

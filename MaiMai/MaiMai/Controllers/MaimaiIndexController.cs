@@ -53,6 +53,7 @@ namespace MaiMai.Controllers
                 price = m.price,
                 img = m.productImg,
                 name = m.productName,
+                
             }).ToList();            
             return Json(PostList, JsonRequestBehavior.AllowGet);
         }

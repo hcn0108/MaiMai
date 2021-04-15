@@ -110,7 +110,7 @@
                 if (cart.length == 0) {
                     $("#noProduct").html(`<h2 class="mb-5" style="text-align:center">目前無任何商品</h2>`);
                 }
-                else {
+                else {                    
                 $(cart).each(function (index, cart) {
                     $("#cartList").append(`
                         <tr>
@@ -159,7 +159,7 @@
     function CartToOrder() {
         var checkedToOrder = [];
         if ($("td input:checked").length == 0) {
-            alert("請選擇商品");
+            swal("下單失敗","請選擇商品", "error");
             return false;
         }
         $("td input:checked").each(function () {
@@ -173,11 +173,15 @@
             //traditional: true,
             contentType: "application/json",
             success: function (status) {
-                alert("下單成功!");
-                window.location.href = "/OrderManager/OrderIndex"
+                swal("下單成功!", "請前往付款", "success");
+                setTimeout("happy()",1000);
+              
                 //location.reload();
             }
         })
+    }
+    function happy() {
+        window.location.href = "/OrderManager/OrderIndex2";
     }
     //}
 </script>

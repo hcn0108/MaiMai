@@ -33,7 +33,7 @@
 
 
                 <li>
-                    <a class="btn"style=" background-color: white;
+                    <a class="btn" style=" background-color: white;
                          color: #FFB4A2;" data-toggle='modal' data-target='#bulid'> 我要徵求</a>
                 </li>
             </ul>
@@ -46,7 +46,9 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" style="        background-color: white;
-                         color: #FFB4A2;" id="editMemberTitle"> 徵求貼文</h5>
+                         color: #FFB4A2;" id="editMemberTitle">
+                            徵求貼文
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -77,6 +79,7 @@
                                         </label>
                                     </div>
                                     <div class="my-selector-b"></div>
+                                    <label for="address">預設面交地址(不會顯示貼文上)</label><input class="ml-2 form-control" type="text" required name="address" id="address">
                                 </div>
 
 
@@ -158,6 +161,14 @@
 </div>
 
 
+@*====================*@
+
+
+
+
+
+@*====================*@
+
 @*=================report 立恆=====================*@
 
 <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -233,6 +244,12 @@
 
                          <div class="collapse w-100 comment" id="collapseComment${i}">
                                <div class="card card-body w-100 comment">
+
+
+
+
+
+
 
                                 </div>
                         </div>
@@ -377,15 +394,10 @@
                         </div>
                     </div>
                        <div class="collapse" id="collapseComment${i}">
-                        <div class="card card-body">
 
-                        </div>
                     </div>
                     <div class="collapse" id="collapseExample${i}">
-                        <div class="card card-body">
 
-                        </div>
-                        </div>
                     </div>`
 
                     $("#pastPost").html(text);
@@ -396,7 +408,7 @@
 
     })// finish tab end
 
-  
+
 
 
     function tag() {
@@ -444,48 +456,54 @@
 
                     if (item.county == null) {
                         inner += `
-                         <div class="row mx-auto shadow-sm mt-2" style="border-top:1px solid #9D9D9D" id="start">
+                                                   <div class="row mx-auto shadow-sm mt-2" style="background-color:#F9F0F2">
 
-                          <div class="photo">  <img src=../Content/ProductPostImg/${item.productImg}> </div>
-                          <div class="post-text">
-                                <div class="d-flex justify-content-between">
-                                 <a class="btn" role="button" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}"><h3 class="ml-1" id="postName${i}">${item.productName}</h3></a>
-                                  
-                                     </div>
-                                <h6 id="userName${i}">賣家 :  <span class="font-weight-bolder">${item.userAccount}</span></h6>
-                                <div>
-                                <h6 id="text${i}">產品敘述 :  <span class="font-weight-bolder">${item.productDescription}</span></h6>
+                                <div class="photo">  <img src=../Content/ProductPostImg/${item.productImg}> </div>
+                                <div class="post-text">
+                                    <div class="d-flex justify-content-between">
+                                        <a class="btn" role="button" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}"><h3 class="ml-1" id="postName${i}">${item.productName}</h3></a>
+
+                                    </div>
+                                    <h6 id="userName${i}">賣家 :  <span class="font-weight-bolder">${item.userAccount}</span></h6>
+                                    <div>
+                                        <h6 id="text${i}">產品敘述 :  <span class="font-weight-bolder">${item.productDescription}</span></h6>
+                                    </div>
+                                    <div class="post-button">
+                                        <h6 id="price${i}"> <span class="font-weight-bolder">價位：${item.price}<span>  元</h6>
+                                        <a class="btn nico_but" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}">查看商品</a>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="post-button">
-                                <h6 id="price${i}"> <span class="font-weight-bolder">價位：${item.price}<span>  元</h6>
-                                <a class="btn btn-secondary" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}">查看商品</a>
-                         </div>
-                        </div>`
+                        `
 
                     }
                     else {
 
                         inner += `
-                         <div class="row mx-auto shadow-lg" style="border-top:1px solid #9D9D9D" id="start">
+                                                    <div class="row mx-auto shadow-lg" style="background-color:#F9F0F2">
 
-                          <div class="photo">  <img src="../Content/resource_nico/images/${item.productImg}"/> </div>
-                          <div class="post-text">
-                                <div class="d-flex justify-content-between">
-                                   <a class="btn" role="button" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}"> <h3 id="postName${i}">${item.productName}</h3></a>
-                                    <h6>${item.county}  <span>${item.district}</span></h6>
-                                     </div>
-                                <h6 id="userName${i}">賣家:${item.userAccount}</h6>
-                                <div>
-                                <div>
-                                <h6 id="text${i}">產品敘述:${item.productDescription}</h6>
+                                <div class="photo">  <img src="../Content/resource_nico/images/${item.productImg}" /> </div>
+                                <div class="post-text">
+                                    <div class="d-flex justify-content-between">
+                                        <a class="btn" role="button" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}"> <h3 id="postName${i}">${item.productName}</h3></a>
+                                        <h6>${item.county}  <span>${item.district}</span></h6>
+                                    </div>
+                                    <h6 id="userName${i}">賣家:${item.userAccount}</h6>
+                                    <div>
+                                        <div>
+                                            <h6 id="text${i}">產品敘述:${item.productDescription}</h6>
+                                        </div>
+                                        <div class="post-button">
+                                            <h6 id="price${i}"><span class="font-weight-bolder">價位：${item.price} </span>  元</h6>
+
+                                            <a class="btn nico_but" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}">查看商品</a>
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="post-button">
-                                <h6 id="price${i}"><span class="font-weight-bolder">價位：${item.price} </span>  元</h6>
-
-                                <a class="btn btn-secondary" href="../../NewMaimaiIndex/ProdutPost?PostID=${item.ProductPostID}">查看商品</a>
-
-                         </div>
-                        </div>`
+                    `
 
 
                     }

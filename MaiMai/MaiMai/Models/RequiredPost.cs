@@ -27,6 +27,7 @@ namespace MaiMai.Models
         public Nullable<bool> isPast { get; set; }
         public string county { get; set; }
         public string district { get; set; }
+        public string address { get; set; }
     
         public virtual Member Member { get; set; }
         public virtual Tag Tag { get; set; }
